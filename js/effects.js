@@ -20,7 +20,11 @@
   var lowEnd = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
                (navigator.deviceMemory && navigator.deviceMemory <= 4);
 
-  var COLORS = { blue: '47,123,255', cyan: '34,211,238', violet: '139,108,246', saffron: '255,153,51' };
+  // Palette channels come from the --rgb-* tokens in style.css (fallbacks match them).
+  var rootStyle = getComputedStyle(document.documentElement);
+  function token(name, fallback) { var v = rootStyle.getPropertyValue(name).replace(/\s/g, ''); return v || fallback; }
+  var COLORS = { blue: token('--rgb-blue', '59,130,246'), cyan: token('--rgb-cyan', '34,211,238'),
+                 violet: token('--rgb-violet', '91,141,239'), saffron: token('--rgb-saffron', '255,153,51') };
 
   /* ---------- helpers --------------------------------------------------- */
 
@@ -154,10 +158,15 @@
       });
 
       ctx.lineWidth = 1;
-      links.forEach(function (l) {
+      links.forEach(function (l, li) {
         var p = P[l[0]], q = P[l[1]], a = 0.05 + (p.z + q.z + 2) * 0.06;
         ctx.strokeStyle = 'rgba(' + COLORS.blue + ',' + a.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+        if (li % 5 === 0 && p.z + q.z > -0.4) {        // signal pulse travelling along a front-facing synapse
+          var h = ((time / 1500) + li * 0.37) % 1;
+          ctx.fillStyle = 'rgba(' + (li % 15 === 0 ? COLORS.saffron : COLORS.cyan) + ',' + (0.9 * Math.sin(h * Math.PI)).toFixed(2) + ')';
+          ctx.beginPath(); ctx.arc(p.x + (q.x - p.x) * h, p.y + (q.y - p.y) * h, 1.6, 0, 6.283); ctx.fill();
+        }
       });
       // data packets travelling from the core to a few nodes
       for (var i = 0; i < P.length; i += 7) {
@@ -165,9 +174,10 @@
         ctx.fillStyle = 'rgba(' + COLORS.cyan + ',' + (1 - ph).toFixed(2) + ')';
         ctx.beginPath(); ctx.arc(cx + (p2.x - cx) * ph, cy + (p2.y - cy) * ph, 1.8, 0, 6.283); ctx.fill();
       }
-      P.forEach(function (p) {
-        ctx.fillStyle = 'rgba(' + p.c + ',' + (0.35 + (p.z + 1) * 0.32).toFixed(2) + ')';
-        ctx.beginPath(); ctx.arc(p.x, p.y, 1.4 + p.k * 1.5, 0, 6.283); ctx.fill();
+      P.forEach(function (p, i) {
+        var fire = Math.pow(0.5 + 0.5 * Math.sin(time / 900 + i * 1.7), 8);   // neurons "fire" on their own phase
+        ctx.fillStyle = 'rgba(' + p.c + ',' + Math.min(1, 0.35 + (p.z + 1) * 0.32 + fire * 0.4).toFixed(2) + ')';
+        ctx.beginPath(); ctx.arc(p.x, p.y, (1.4 + p.k * 1.5) * (1 + fire * 0.8), 0, 6.283); ctx.fill();
       });
     }
 
@@ -191,8 +201,9 @@
   }
 
   /* ---------- Full tier: Three.js neural core --------------------------- */
-  // Scene (blue/cyan with a few saffron accents): glowing core, shell of connected nodes, orbiting rings with
-  // satellites, particles flowing core -> nodes, and a faint drifting floor grid.
+  // Scene "AI network": glowing core, a shell of neurons that fire (shader points), synapses that carry
+  // travelling signal pulses (shader lines), particles flowing core -> nodes, two orbit rings and a faint
+  // floor grid. Colours come from the --rgb-* tokens; additive blending gives the glow without postprocessing.
   function initThree(container, canvas, onFail) {
     import(THREE_URL).then(function (THREE) {
       var renderer;
@@ -203,6 +214,10 @@
       renderer.setClearColor(0x000000, 0);
 
       var scene = new THREE.Scene();
+      function col(rgb) { return new THREE.Color('rgb(' + rgb + ')'); }
+      var C = { blue: col(COLORS.blue), cyan: col(COLORS.cyan), violet: col(COLORS.violet), saffron: col(COLORS.saffron) };
+      var pr = Math.min(window.devicePixelRatio || 1, 1.5);
+      var uTime = { value: 0 };
       var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
       camera.position.set(0, 0.3, 10);
       var root = new THREE.Group();            // mouse-parallax target
@@ -213,65 +228,110 @@
       function glowTexture(inner) {
         var c = document.createElement('canvas'); c.width = c.height = 64;
         var x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-        g.addColorStop(0, inner); g.addColorStop(0.35, 'rgba(47,123,255,0.35)'); g.addColorStop(1, 'rgba(47,123,255,0)');
+        g.addColorStop(0, inner); g.addColorStop(0.35, 'rgba(' + COLORS.blue + ',0.35)'); g.addColorStop(1, 'rgba(' + COLORS.blue + ',0)');
         x.fillStyle = g; x.fillRect(0, 0, 64, 64);
         return new THREE.CanvasTexture(c);
       }
 
       // -- core: wireframe icosahedron + bright centre + additive halo
       var core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.95, 1),
-        new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.55 }));
+        new THREE.MeshBasicMaterial({ color: C.cyan, wireframe: true, transparent: true, opacity: 0.5 }));
       var inner = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 24),
-        new THREE.MeshBasicMaterial({ color: 0x3b8bff }));
-      var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture('rgba(120,220,255,0.95)'), blending: THREE.AdditiveBlending, depthWrite: false }));
+        new THREE.MeshBasicMaterial({ color: C.blue }));
+      var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture('rgba(' + COLORS.cyan + ',0.95)'), blending: THREE.AdditiveBlending, depthWrite: false }));
       halo.scale.set(5.2, 5.2, 1);
       spin.add(core, inner, halo);
 
-      // -- nodes on a jittered Fibonacci shell
-      var NODES = 104, nodePos = [], pos = new Float32Array(NODES * 3), col = new Float32Array(NODES * 3);
-      var palette = [new THREE.Color(0x2f7bff), new THREE.Color(0x22d3ee), new THREE.Color(0x8b6cf6), new THREE.Color(0xff9933)];
+      // -- neurons on a jittered Fibonacci shell; each fires on its own phase
+      var NODES = 110, nodePos = [], pos = new Float32Array(NODES * 3), ncol = new Float32Array(NODES * 3), nsize = new Float32Array(NODES), nphase = new Float32Array(NODES);
       var ga = Math.PI * (3 - Math.sqrt(5));
       for (var i = 0; i < NODES; i++) {
         var y = 1 - (i / (NODES - 1)) * 2, r = Math.sqrt(1 - y * y), th = ga * i;
         var rad = 2.3 + Math.random() * 1.2;
         var v = new THREE.Vector3(Math.cos(th) * r * rad, y * rad, Math.sin(th) * r * rad);
         nodePos.push(v); v.toArray(pos, i * 3);
-        var c = palette[i % 11 === 0 ? 3 : (i % 7 === 0 ? 2 : (i % 3 === 0 ? 1 : 0))]; c.toArray(col, i * 3);
+        (i % 13 === 0 ? C.saffron : i % 3 === 0 ? C.cyan : i % 5 === 0 ? C.violet : C.blue).toArray(ncol, i * 3);
+        nsize[i] = 12 + Math.random() * 12; nphase[i] = Math.random() * 6.283;
       }
       var pGeo = new THREE.BufferGeometry();
       pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      pGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-      spin.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
-        size: 0.19, map: glowTexture('rgba(255,255,255,1)'), vertexColors: true, transparent: true,
-        blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })));
+      pGeo.setAttribute('aColor', new THREE.BufferAttribute(ncol, 3));
+      pGeo.setAttribute('aSize', new THREE.BufferAttribute(nsize, 1));
+      pGeo.setAttribute('aPhase', new THREE.BufferAttribute(nphase, 1));
+      spin.add(new THREE.Points(pGeo, new THREE.ShaderMaterial({
+        uniforms: { uTime: uTime, uPr: { value: pr } },
+        vertexShader: [
+          'uniform float uTime; uniform float uPr;',
+          'attribute vec3 aColor; attribute float aSize; attribute float aPhase;',
+          'varying vec3 vColor; varying float vFire;',
+          'void main() {',
+          '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+          '  vFire = pow(0.5 + 0.5 * sin(uTime * 1.1 + aPhase), 8.0);',          // short, sharp "firing" spikes
+          '  vColor = aColor;',
+          '  gl_PointSize = aSize * (1.0 + vFire * 0.9) * uPr * (10.0 / -mv.z);',
+          '  gl_Position = projectionMatrix * mv;',
+          '}'].join('\n'),
+        fragmentShader: [
+          'varying vec3 vColor; varying float vFire;',
+          'void main() {',
+          '  float d = length(gl_PointCoord - 0.5);',
+          '  float halo = smoothstep(0.5, 0.0, d);',
+          '  float core = smoothstep(0.14, 0.0, d);',
+          '  vec3 c = vColor * halo * (0.55 + vFire * 0.9) + vec3(1.0) * core * (0.5 + vFire * 0.5);',
+          '  gl_FragColor = vec4(c, halo);',
+          '}'].join('\n'),
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
 
-      // -- connections between near neighbours
-      var seg = [];
+      // -- synapses between near neighbours, each carrying a travelling signal pulse
+      var seg = [], segT = [], segSeed = [], segWarm = [];
       for (var a = 0; a < NODES; a++) for (var b = a + 1; b < NODES; b++) {
-        if (nodePos[a].distanceToSquared(nodePos[b]) < 2.1) seg.push(nodePos[a].x, nodePos[a].y, nodePos[a].z, nodePos[b].x, nodePos[b].y, nodePos[b].z);
+        if (nodePos[a].distanceToSquared(nodePos[b]) < 2.1) {
+          seg.push(nodePos[a].x, nodePos[a].y, nodePos[a].z, nodePos[b].x, nodePos[b].y, nodePos[b].z);
+          var sd = Math.random(), wm = Math.random() < 0.12 ? 1 : 0;
+          segT.push(0, 1); segSeed.push(sd, sd); segWarm.push(wm, wm);
+        }
       }
-      var lGeo = new THREE.BufferGeometry(); lGeo.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3));
-      spin.add(new THREE.LineSegments(lGeo, new THREE.LineBasicMaterial({ color: 0x4f94ff, transparent: true, opacity: 0.2 })));
+      var lGeo = new THREE.BufferGeometry();
+      lGeo.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3));
+      lGeo.setAttribute('aT', new THREE.Float32BufferAttribute(segT, 1));
+      lGeo.setAttribute('aSeed', new THREE.Float32BufferAttribute(segSeed, 1));
+      lGeo.setAttribute('aWarm', new THREE.Float32BufferAttribute(segWarm, 1));
+      spin.add(new THREE.LineSegments(lGeo, new THREE.ShaderMaterial({
+        uniforms: { uTime: uTime, uBase: { value: C.blue }, uSig: { value: C.cyan }, uWarm: { value: C.saffron } },
+        vertexShader: [
+          'attribute float aT; attribute float aSeed; attribute float aWarm;',
+          'varying float vT; varying float vSeed; varying float vWarm;',
+          'void main() { vT = aT; vSeed = aSeed; vWarm = aWarm; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }'].join('\n'),
+        fragmentShader: [
+          'uniform float uTime; uniform vec3 uBase; uniform vec3 uSig; uniform vec3 uWarm;',
+          'varying float vT; varying float vSeed; varying float vWarm;',
+          'void main() {',
+          '  float head = fract(uTime * (0.18 + vSeed * 0.22) + vSeed * 7.0);',   // where the pulse is on this synapse
+          '  float pulse = smoothstep(0.16, 0.0, abs(vT - head)) * step(0.45, vSeed);',  // about half the synapses carry a signal
+          '  vec3 sig = mix(uSig, uWarm, vWarm);',
+          '  gl_FragColor = vec4(uBase * 0.34 + sig * pulse * 0.95, 0.3 + pulse * 0.7);',
+          '}'].join('\n'),
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
 
       // -- flowing data particles: each travels core -> a chosen node, then restarts
       var FLOW = 44, flow = [], fPos = new Float32Array(FLOW * 3);
       for (var f = 0; f < FLOW; f++) flow.push({ to: nodePos[(f * 7) % NODES], t: Math.random(), s: 0.25 + Math.random() * 0.35 });
       var fGeo = new THREE.BufferGeometry(); fGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3));
-      spin.add(new THREE.Points(fGeo, new THREE.PointsMaterial({ size: 0.13, color: 0x9ff3ff, map: glowTexture('rgba(200,255,255,1)'), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+      spin.add(new THREE.Points(fGeo, new THREE.PointsMaterial({ size: 0.12, color: C.cyan, map: glowTexture('rgba(255,255,255,1)'), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
 
       // -- orbiting rings, each with a satellite
       var rings = [];
-      [[3.6, 0.5, 0.2], [4.3, -0.7, 0.9], [3.0, 1.2, -0.4]].forEach(function (cfg, k) {
+      [[3.7, 0.5, 0.2], [4.4, -0.7, 0.9]].forEach(function (cfg, k) {
         var g = new THREE.Group();
         g.add(new THREE.Mesh(new THREE.TorusGeometry(cfg[0], 0.008, 6, 120),
-          new THREE.MeshBasicMaterial({ color: k === 1 ? 0x8b6cf6 : 0x2f7bff, transparent: true, opacity: 0.4 })));
-        var sat = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 12), new THREE.MeshBasicMaterial({ color: k === 1 ? 0xffb84d : 0x9ff3ff }));
+          new THREE.MeshBasicMaterial({ color: k === 1 ? C.violet : C.blue, transparent: true, opacity: 0.35 })));
+        var sat = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 12), new THREE.MeshBasicMaterial({ color: k === 1 ? C.saffron : C.cyan }));
         g.add(sat); g.rotation.set(cfg[1], cfg[2], 0);
         spin.add(g); rings.push({ sat: sat, r: cfg[0], p: k * 2.1, s: 0.35 + k * 0.12 });
       });
 
       // -- subtle floor grid that drifts toward the camera
-      var grid = new THREE.GridHelper(20, 28, 0x2f7bff, 0x2f7bff);
+      var grid = new THREE.GridHelper(20, 28, C.blue, C.blue);
       grid.material.transparent = true; grid.material.opacity = 0.12; grid.position.y = -4.2;
       root.add(grid);
 
@@ -295,6 +355,7 @@
       var tmp = new THREE.Vector3(), clock = new THREE.Clock(), raf = 0, visible = true;
 
       function update(dt, elapsed) {
+        uTime.value = elapsed;
         spin.rotation.y += dt * 0.12;
         tx += (mx * 0.35 - tx) * 0.04; ty += (my * 0.22 - ty) * 0.04;
         root.rotation.y = tx; root.rotation.x = ty;
@@ -341,7 +402,9 @@
       SphereNetwork(canvas);
     }
 
-    if (useFull) initThree(container, canvas, lite); else SphereNetwork(canvas);
+    // Three.js is fetched once the browser is idle so it never competes with the headline (LCP)
+    var idle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 600); };
+    if (useFull) idle(function () { initThree(container, canvas, lite); }, { timeout: 1500 }); else SphereNetwork(canvas);
   }
 
   window.NextGenFX = {
