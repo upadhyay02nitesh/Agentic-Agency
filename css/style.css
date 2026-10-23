@@ -1319,3 +1319,20 @@ img.tile-img, .cap-img, .ph-media img, .sec-media img, .svc-photo, .offer-photo,
 .panel .why-card { background: var(--panel-grey); }
 #genai .sec-media img, #global .sec-media img { aspect-ratio: 21 / 8; }
 @media (max-width: 575.98px) { #genai .sec-media img, #global .sec-media img { aspect-ratio: 16 / 9; } }
+/* phones: grid/flex children may shrink below their content; long emails and URLs wrap instead of widening the page */
+.contact-grid > *, .form-grid > *, .ind-body, .why-card, .tech-card, .founder > div { min-width: 0; }
+.contact-card a, .footer-contact a, .contact-info a, .founder a { overflow-wrap: anywhere; }
+/* ---- V6.2 mobile polish: 44px touch targets, no text under ~12px ---------- */
+.footer h2 { font-size: .8rem; }
+.badge-nx { font-size: .72rem; }
+.fnode .ftag, .project-tag, .cap-kicker, .hub-detail .cat, .offer .tag { font-size: .75rem; }
+.price-card .pop { font-size: .72rem; }
+.switch::before { content: ""; position: absolute; inset: -8px -6px; }      /* bigger hit area, same look */
+@media (max-width: 767.98px) {
+  .link-arrow { min-height: 44px; }
+  .footer li a { padding: 10px 0; min-height: 44px; display: inline-flex; align-items: center; }
+  .footer-word { padding: 6px 0; }
+  .rng input[type=range] { height: 44px; }
+  .hub-core { font-size: .7rem; }
+  .hub-node { font-size: .68rem; }
+}
