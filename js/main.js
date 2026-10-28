@@ -31,6 +31,13 @@
     responseTime: 'within one business day',      // shown in "Built for international clients". Make sure you can keep it.
     // Founder / lead engineer card (home + about). Hidden until name is set. Use only real details.
     founder: { name: '', role: 'Founder & GenAI engineer', bio: '', photo: '', linkedin: '', github: '' },
+    // AI packages (home + pricing + industry pages). SAMPLE PRICES in USD: set your real ones.
+    packages: {
+      chat:     { setup: 1490, monthly: 149 },
+      voice:    { setup: 2490, monthly: 349 },
+      followup: { setup: 1990, monthly: 199 },
+      growth:   { setup: 5900, monthly: 590 }
+    },
     // Proof section on the homepage. Stays hidden until you add REAL entries. Never invent these.
     // results:      [{ value: '32 h', label: 'saved per week at a 6-person clinic' }]
     // testimonials: [{ quote: '…', name: 'Jane Doe', role: 'Owner', company: 'Smile Dental' }]   (with permission)
@@ -140,6 +147,11 @@
         (ai ? '<span class="pchip">AI automation from <b>' + formatMoney(ai.min) + '</b></span>' : '');
       hp.hidden = false;
     }
+    // AI package prices: data-pkg="voice.setup"
+    $$('[data-pkg]').forEach(function (el) {
+      var p = el.getAttribute('data-pkg').split('.'), v = CONFIG.packages && CONFIG.packages[p[0]] && CONFIG.packages[p[0]][p[1]];
+      if (v) el.textContent = formatMoney(v);
+    });
     // Book-a-call buttons
     $$('[data-booking]').forEach(function (b) { if (CONFIG.bookingUrl) { b.href = CONFIG.bookingUrl; b.target = '_blank'; b.rel = 'noopener'; b.hidden = false; } });
     $$('[data-booking-row]').forEach(function (r) { r.hidden = !CONFIG.bookingUrl; });

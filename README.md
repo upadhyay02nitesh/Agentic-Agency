@@ -6,13 +6,13 @@ Stack: HTML5, CSS3, vanilla JavaScript, Bootstrap 5 (grid + navbar collapse only
 
 ## Run it
 
-Double-click `index.html`, or serve the folder:
+Serve the folder (needed for the self-hosted font; opening files directly shows a fallback font):
 
 ```bash
 python -m http.server 8080      # then open http://localhost:8080
 ```
 
-Bootstrap, icons and the font load from CDNs, so you need internet.
+Bootstrap, Bootstrap Icons and GSAP load from CDNs, so you need internet. Montserrat is self-hosted in `assets/fonts/`.
 
 ## Pages and structure
 
@@ -63,6 +63,13 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 **Measured (local, Lighthouse 12, desktop):** performance 95, accessibility 100, best practices 100, SEO 100; TBT 0 ms, LCP 1.1 s, CLS 0.001.
 
 **Placeholders to fill (all in `js/main.js` → `CONFIG`):** `bookingUrl` (all "Book a free call" buttons switch to it), `proof.results / testimonials / logos` (real, with permission), `founder`. Every number on the slides and in the day timeline is labelled as an **example**; replace them with real client numbers as you get them (edit the `SLIDES` / `DAY` lists, or the HTML in `index.html`).
+
+## V8: packages and industry landing pages
+
+- **AI packages** (`#packages` on the homepage and at the top of `pricing.html`): AI Chat Assistant, AI Receptionist, Lead Follow-up Engine and Growth Bundle, each with a setup price, a monthly plan, what is included and time to launch. **Prices are sample values:** set your real ones in `CONFIG.packages` in `js/main.js`; the page updates every `data-pkg` price from there. Website packages moved below on the pricing page (`pricing.html#websites`).
+- **Industry landing pages:** `ai-for-clinics.html`, `ai-for-home-services.html`, `ai-for-real-estate.html`. Each one has pains, four automations, an example week (labelled), a recommended package, an industry FAQ (with FAQPage JSON-LD) and a call-to-action. They are linked from the header's Solutions menu ("By industry"), the footer's Industries column, the homepage industry tabs and `sitemap.xml`. Use them as the landing page for cold emails and ads aimed at each niche.
+- **Font:** Montserrat is self-hosted (variable 400–800, latin + latin-ext) and preloaded, replacing the Google Fonts request. This removed a font-swap layout shift on long headings.
+- **Measured (local http, Lighthouse 12, desktop):** home 97 / 100 / 100 / 100, real-estate page 96 / 100 / 100 / 100; CLS 0.
 
 ## Design tokens (`:root` in `css/style.css`)
 
