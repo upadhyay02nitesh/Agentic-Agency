@@ -45,6 +45,25 @@ muted text `#848385`, ink `#0e0f11`, font Montserrat (Bold uppercase headings), 
 - **Enquiry form** (home `#contact`, contact page `#enquiry`): full name, business email, phone (international, 7–15 digits), company (optional), service, budget (optional), project description. Inline validation, `aria-invalid` + error text, loading state, double-submit guard. Success is shown only after a real send (`submitMethod: 'service'`), and the default `'mailto'` route says the email app is opening rather than claiming success.
 - **Mockup / SVG colours:** every navy hex in the inline SVGs was remapped to the new palette (blue → violet `#8b5cf6`, saffron → magenta, navy → near-black). Photos get a CSS `saturate(.6)` to neutralise the old navy grade.
 
+## V7 homepage: scroll-driven presentation for business owners
+
+The homepage reads like a pitch deck: one idea per screen, plain English, no jargon in headlines.
+
+1. **Hero:** "We build AI employees that work 24/7 for your business." Tasks (email, call, invoice, lead…) fly into a glowing AI core and come out done (CSS only).
+2. **Your day today vs. with AI** (`#day`): a pinned split screen; rows light up as the day plays and a counter climbs to ~25 hours/week.
+3. **Eight automation slides** (`#showcase`): chatbot, voice receptionist, lead follow-up, booking, invoices & paperwork, reviews, owner reports, websites. Each follows the same beats: problem → what we build → diagram that draws itself → result numbers + "Perfect for". Slide dots + `03 / 08` counter, ← / → keys.
+4. **How we work** (`#how`): four steps on a path that fills as you scroll, plus time-zone overlap, fixed price, NDA and ownership.
+5. **Savings calculator** (`#savings`): hours, hourly cost, missed leads and customer value → monthly value; labelled as an estimate with its assumptions (60% of repetitive hours, 30% of missed leads).
+6. **Industry tabs** (`#industries`): clinics, real estate, e-commerce, restaurants, agencies, home services.
+7. **Proof** (`#proof`): hidden until you add real entries to `CONFIG.proof` in `js/main.js`.
+8. **FAQ** for non-technical owners (with FAQPage JSON-LD). 9. **Final CTA + enquiry form:** "Let's find your first 10 hours to automate."
+
+**How it behaves:** `js/present.js` uses GSAP 3.12.5 + ScrollTrigger (cdnjs) and runs only on desktop (≥ 992px) with motion allowed. It is built on the first scroll, key or touch, so page load stays light. Phones, `prefers-reduced-motion` and no-JS get static stacked cards with every word visible; numbers count up once on view. The technical sections (GenAI engineering, tools) moved to `ai-automation.html` and `integrations.html`; jargon headings site-wide were rewritten in plain English, and "CRM" has a tooltip where it appears.
+
+**Measured (local, Lighthouse 12, desktop):** performance 95, accessibility 100, best practices 100, SEO 100; TBT 0 ms, LCP 1.1 s, CLS 0.001.
+
+**Placeholders to fill (all in `js/main.js` → `CONFIG`):** `bookingUrl` (all "Book a free call" buttons switch to it), `proof.results / testimonials / logos` (real, with permission), `founder`. Every number on the slides and in the day timeline is labelled as an **example**; replace them with real client numbers as you get them (edit the `SLIDES` / `DAY` lists, or the HTML in `index.html`).
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.

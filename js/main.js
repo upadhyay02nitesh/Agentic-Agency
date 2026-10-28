@@ -31,6 +31,11 @@
     responseTime: 'within one business day',      // shown in "Built for international clients". Make sure you can keep it.
     // Founder / lead engineer card (home + about). Hidden until name is set. Use only real details.
     founder: { name: '', role: 'Founder & GenAI engineer', bio: '', photo: '', linkedin: '', github: '' },
+    // Proof section on the homepage. Stays hidden until you add REAL entries. Never invent these.
+    // results:      [{ value: '32 h', label: 'saved per week at a 6-person clinic' }]
+    // testimonials: [{ quote: '…', name: 'Jane Doe', role: 'Owner', company: 'Smile Dental' }]   (with permission)
+    // logos:        [{ src: 'assets/images/clients/acme.svg', alt: 'Acme Co.' }]               (with permission)
+    proof: { results: [], testimonials: [], logos: [] },
 
     // All prices on the site are in this currency. Change symbol/locale here only.
     currency: { symbol: '$', code: 'USD', locale: 'en-US' },
@@ -816,6 +821,59 @@
     });
   }
 
+  /* ---- Owner savings calculator (homepage #owner-roi) --------------------------------
+     time saved = hours/week × 4.33 × hourly cost × 60% automated
+     recovered  = missed leads/month × 30% won back × customer value. Labelled as an estimate on the page. */
+  function initOwnerRoi() {
+    var box = $('#owner-roi'); if (!box) return;
+    var ins = $$('input[type=range]', box), shown = { total: 0 }, raf = 0;
+    function v(id) { return +$('#' + id, box).value; }
+    function paint(el, n) { el.textContent = formatMoney(n); }
+    function calc() {
+      ins.forEach(function (i) { var o = $('output[for=' + i.id + ']', box), u = o.getAttribute('data-unit');
+        o.textContent = u === '$' ? formatMoney(+i.value) + (i.id === 'o-cost' ? '/hr' : '') : i.value + (u ? ' ' + u : ''); });
+      var hours = v('o-hours') * 4.33 * 0.6, time = hours * v('o-cost'), leads = v('o-missed') * 0.3 * v('o-value'), total = time + leads;
+      paint($('[data-o="time"]', box), time); paint($('[data-o="leads"]', box), leads);
+      $('[data-o="hours"]', box).textContent = Math.round(hours) + ' h';
+      var el = $('[data-o="total"]', box), from = shown.total, t0 = 0;
+      cancelAnimationFrame(raf);
+      if (reduceMotion) { shown.total = total; paint(el, total); return; }
+      raf = requestAnimationFrame(function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 450);
+        shown.total = from + (total - from) * (1 - Math.pow(1 - p, 3)); paint(el, shown.total); if (p < 1) raf = requestAnimationFrame(step); });
+    }
+    ins.forEach(function (i) { i.addEventListener('input', calc); }); calc();
+  }
+
+  /* ---- Tabs (industries): roving tabindex, arrow keys, Home/End. Without JS all panels show. */
+  function initTabs() {
+    $$('[data-tabs]').forEach(function (box) {
+      var tabs = $$('[role="tab"]', box), panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+      function sel(i, focus) {
+        tabs.forEach(function (t, k) { var on = k === i; t.setAttribute('aria-selected', on ? 'true' : 'false'); t.tabIndex = on ? 0 : -1; panels[k].hidden = !on; });
+        if (focus) tabs[i].focus();
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () { sel(i); });
+        t.addEventListener('keydown', function (e) {
+          var k = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+          if (k === undefined) return; e.preventDefault(); sel((k + tabs.length) % tabs.length, true);
+        });
+      });
+      sel(0);
+    });
+  }
+
+  /* ---- Proof: renders only real entries from CONFIG.proof; otherwise the section stays hidden */
+  function initProof() {
+    var sec = $('[data-proof]'), P = CONFIG.proof || {}; if (!sec) return;
+    var r = P.results || [], q = P.testimonials || [], l = P.logos || [];
+    if (!r.length && !q.length && !l.length) { sec.hidden = true; return; }
+    $('[data-proof-results]', sec).innerHTML = r.map(function (x) { return '<div><b>' + esc(x.value) + '</b><span>' + esc(x.label) + '</span></div>'; }).join('');
+    $('[data-proof-quotes]', sec).innerHTML = q.map(function (x) { return '<blockquote><p>“' + esc(x.quote) + '”</p><footer>' + esc(x.name) + (x.role ? ', ' + esc(x.role) : '') + (x.company ? ' · ' + esc(x.company) : '') + '</footer></blockquote>'; }).join('');
+    $('[data-proof-logos]', sec).innerHTML = l.map(function (x) { return '<img src="' + esc(x.src) + '" alt="' + esc(x.alt) + '" height="34" loading="lazy">'; }).join('');
+    sec.hidden = false;
+  }
+
   /* ---- Effects bootstrap (below-fold canvases start only when near viewport) -- */
   function initEffects() {
     var FX = window.NextGenFX; if (!FX) return;
@@ -840,7 +898,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();
