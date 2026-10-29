@@ -17,11 +17,11 @@
     whatsappNumber: '919200968689',                // digits only with country code, e.g. '919876543210'
     whatsappMessage: 'Hi, I want a website for my business',
     phone: '',                                     // e.g. '+1 415 555 0134'. Empty = Call buttons stay hidden
-    email: 'nextgenaiinfotech01@gmail.com',       // public contact email shown on the site
+    email: 'sales@nextgenailabs.com',       // public contact email shown on the site
     // How the contact form delivers: 'mailto' = opens the visitor's email app with the enquiry ready to send (default),
     // 'service' = sends silently through FormSubmit, 'both' = does both.
-    submitMethod: 'mailto',
-    formEmail: 'nextgenaiinfotech01@gmail.com',   // inbox that receives form enquiries (via FormSubmit). Not shown on the page.                         
+    submitMethod: 'service',                       // sends silently to formEmail via FormSubmit (first ever submission: click the activation link FormSubmit emails you)
+    formEmail: 'sales@nextgenailabs.com',   // inbox that receives form enquiries (via FormSubmit). Not shown on the page.                         
     city: '',                            // e.g. 'Bengaluru'
     address: 'Remote · serving clients worldwide',  // office address, or how you work
     delivery: '1 month 15 days',               // typical delivery time
@@ -387,9 +387,11 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        _subject: 'New website enquiry from ' + data.name,
+        _subject: 'New enquiry from ' + data.name + (data.company ? ' (' + data.company + ')' : '') + ': ' + data.service,
         _template: 'table', _captcha: 'false',
-        _replyto: data.email,
+        _replyto: data.email, email: data.email,
+        // automatic confirmation email to the customer (FormSubmit sends it to the "email" field)
+        _autoresponse: 'Hi ' + data.name.split(' ')[0] + ', thanks for contacting NextGen AI Labs! We have received your enquiry about "' + data.service + '" and will reply within one business day with questions or a suggested plan. If it is urgent, reply to this email or message us on WhatsApp. — NextGen AI Labs · sales@nextgenailabs.com · www.nextgenailabs.com',
         Name: data.name, Email: data.email, Phone: data.phone, Company: data.company || '-', Service: data.service, Budget: data.budget || '-', Project: data.message, Page: location.href
       })
     }).then(function (r) { return r.json(); }).then(function (j) {
@@ -418,6 +420,19 @@
       '<a class="btn-nx btn-nx--ghost btn-nx--sm" href="' + wa + '" target="_blank" rel="noopener"><i class="bi bi-whatsapp" aria-hidden="true"></i> Send on WhatsApp</a></span>';
     status.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
     window.location.href = mailto;                    // hands over to the device's email app
+  }
+
+  /* ---- Small celebratory burst for a successful enquiry (transform/opacity only, removes itself) ---- */
+  function confetti(host) {
+    var box = document.createElement('div'); box.className = 'confetti'; box.setAttribute('aria-hidden', 'true');
+    var cols = ['#ff29d0', '#7b2fff', '#4ade80', '#ffffff', '#ff8ee8'];
+    for (var i = 0; i < 28; i++) {
+      var p = document.createElement('i'), a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 120;
+      p.style.setProperty('--x', (Math.cos(a) * d).toFixed(0) + 'px'); p.style.setProperty('--y', (Math.sin(a) * d - 40).toFixed(0) + 'px');
+      p.style.setProperty('--r', (Math.random() * 540 - 270).toFixed(0) + 'deg'); p.style.background = cols[i % cols.length]; p.style.animationDelay = (Math.random() * 0.12).toFixed(2) + 's';
+      box.appendChild(p);
+    }
+    host.appendChild(box); setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1600);
   }
 
   function initForm() {
@@ -458,19 +473,25 @@
       if (method !== 'service') { openEmailApp(data, status, form); if (method === 'both') submitInquiry(data).catch(function () {}); return; }
       btn.disabled = true; btn.setAttribute('aria-busy', 'true'); var label = btn.innerHTML; btn.innerHTML = '<span class="spin" aria-hidden="true"></span> Sending…';
       submitInquiry(data).then(function () {
-        var msg = enquiryWa(data);
-        status.className = 'form-status show ok';
-        status.innerHTML = '<strong>Thank you!</strong> We have received your enquiry and will contact you shortly.<br>';
-        var a = document.createElement('a');
-        a.className = 'btn-nx btn-nx--primary btn-nx--sm'; a.href = waLink(msg); a.target = '_blank'; a.rel = 'noopener';
-        a.innerHTML = '<i class="bi bi-whatsapp" aria-hidden="true"></i> Continue on WhatsApp';
-        status.appendChild(a); a.focus({ preventScroll: true });
-        form.reset();
+        // real success only: animated confirmation card with next steps (replaces the form)
+        var first = esc(data.name.split(' ')[0]), wrap = form.parentNode, card = document.createElement('div');
+        card.className = 'sent-card'; card.setAttribute('role', 'status'); card.setAttribute('tabindex', '-1');
+        card.innerHTML = '<svg class="sent-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27 l7 7 l15 -16"/></svg>' +
+          '<h3>Thanks, ' + first + '! Your enquiry is in.</h3><p>We have sent a confirmation to <b>' + esc(data.email) + '</b>. Here is what happens next:</p>' +
+          '<ol class="sent-steps"><li><i class="bi bi-envelope-check" aria-hidden="true"></i><span><b>Within one business day</b> we reply with questions or a suggested plan.</span></li>' +
+          '<li><i class="bi bi-camera-video" aria-hidden="true"></i><span><b>Free 30-minute call</b> at a time that suits your time zone.</span></li>' +
+          '<li><i class="bi bi-file-earmark-check" aria-hidden="true"></i><span><b>Written plan and fixed price</b> before any work starts.</span></li></ol>' +
+          '<div class="sent-actions"><a class="btn-nx btn-nx--primary btn-nx--sm" href="' + waLink(enquiryWa(data)) + '" target="_blank" rel="noopener"><i class="bi bi-whatsapp" aria-hidden="true"></i> Continue on WhatsApp</a>' +
+          '<a class="btn-text" href="mailto:' + (CONFIG.email || CONFIG.formEmail) + '">Email ' + esc(CONFIG.email || CONFIG.formEmail) + '</a></div>';
+        Array.prototype.slice.call(wrap.children).forEach(function (el) { if (el.tagName === 'P' || (el.classList && el.classList.contains('cta-book'))) el.hidden = true; });
+        form.hidden = true; wrap.insertBefore(card, form); status.className = 'form-status'; status.textContent = '';
+        card.focus({ preventScroll: true }); card.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+        if (!reduceMotion) confetti(card);
       }).catch(function (err) {
         if (window.console) console.warn('Enquiry email failed:', err && err.message);   // owner hint, e.g. 'needs Activation'
         var m = enquiryWa(data);
         status.className = 'form-status show err';
-        status.innerHTML = 'Sorry, we could not send that just now. Please send it on WhatsApp instead:<br>';
+        status.innerHTML = 'Sorry, we could not send that just now. Please send it on WhatsApp or email us at <a href="mailto:' + (CONFIG.email || CONFIG.formEmail) + '">' + esc(CONFIG.email || CONFIG.formEmail) + '</a>:<br>';
         var w = document.createElement('a'); w.className = 'btn-nx btn-nx--primary btn-nx--sm'; w.href = waLink(m); w.target = '_blank'; w.rel = 'noopener';
         w.innerHTML = '<i class="bi bi-whatsapp" aria-hidden="true"></i> Send on WhatsApp'; status.appendChild(w);
       }).then(function () { btn.disabled = false; btn.removeAttribute('aria-busy'); btn.innerHTML = label; });

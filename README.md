@@ -126,6 +126,13 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Sticky team summary** on phones while building an AI team ("3 selected · 14 h/week · See your plan"), shown only while the result card is off screen.
 - **Touch feedback:** buttons, cards, tabs and FAQ rows press in slightly when tapped; Android phones get a tiny vibration when an AI employee is added.
 
+## V21: sales@nextgenailabs.com + real form sending
+
+- Every email address on the site is **sales@nextgenailabs.com** (`CONFIG.email`, `CONFIG.formEmail`, mailto links, structured data).
+- The enquiry form now **sends silently** through FormSubmit (`CONFIG.submitMethod: 'service'`) to sales@nextgenailabs.com, with a subject like "New enquiry from Sarah Lee (Bright Smile Dental): AI chatbot or agent", reply-to set to the customer, and an **automatic confirmation email** to the customer.
+- **Success screen** (only after FormSubmit confirms): animated check, the customer’s name, the three next steps, WhatsApp and email buttons, and a short confetti burst (off under reduced motion). On failure it offers WhatsApp and email instead; nothing claims success that did not happen.
+- **One-time setup:** the very first real submission makes FormSubmit email an activation link to sales@nextgenailabs.com. Click it once; after that, enquiries arrive normally. Check spam the first time.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.
