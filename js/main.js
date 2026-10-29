@@ -937,6 +937,34 @@
     setTimeout(go, 3500);
   }
 
+  /* ---- Hero live automation feed (demo): a new example event every ~2.6 s, stamped with the visitor's
+     real clock time, shown as "working" then "done in Xs". Static rows under reduced motion / no JS. ---- */
+  function initLiveFeed() {
+    var box = $('[data-live-feed]'); if (!box || reduceMotion) return;
+    var list = $('.lf-list', box), on = true, i = 0;
+    var EV = [
+      ['bi-whatsapp', 'WhatsApp from Maya', 'Booked Sat 2:00 PM', 3.1], ['bi-telephone', 'Call from (415) •••-0192', 'Answered and booked', 41],
+      ['bi-envelope', 'Email: Order #1182 status?', 'Replied with tracking', 38], ['bi-receipt', 'Invoice INV-0932', 'Entered in QuickBooks', 6.4],
+      ['bi-person-plus', 'New lead from Google Ads', 'Replied + follow-up set', 58], ['bi-star', 'New 5-star Google review', 'Thank-you reply sent', 2.0],
+      ['bi-calendar-x', 'Cancellation, Tue 10 AM', 'Slot offered to waitlist', 1.2], ['bi-globe2', 'Website chat at 2:13 AM', 'Airport transfer added', 24],
+      ['bi-instagram', 'Instagram DM from Leo', 'Trial class booked', 19], ['bi-cart', 'Abandoned cart, $84', 'Reminder sent', 0.9],
+      ['bi-file-earmark-check', 'Contract signed', 'Onboarding email sent', 1.6], ['bi-bar-chart', '7:00 AM', 'Daily owner report sent', 4.2]];
+    function clock() { var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
+    function add() {
+      if (!on || document.hidden) return;
+      var e = EV[i++ % EV.length], li = document.createElement('li');
+      li.className = 'lf-row is-new';
+      li.innerHTML = '<span class="lf-ic"><i class="bi ' + e[0] + '" aria-hidden="true"></i></span><span class="lf-txt"><b>' + esc(e[1]) + '</b><span>' + esc(e[2]) + '</span></span>' +
+        '<span class="lf-meta"><span class="lf-time">' + clock() + '</span><span class="lf-status"><span class="spin" aria-hidden="true"></span>working</span></span>';
+      list.insertBefore(li, list.firstChild);
+      while (list.children.length > 3) list.removeChild(list.lastChild);
+      setTimeout(function () { li.classList.add('is-done'); $('.lf-status', li).innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i>' + e[3] + 's'; }, 1100);
+    }
+    $$('.lf-time', box).forEach(function (t) { t.textContent = clock(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { on = en[0].isIntersecting; }).observe(box);
+    setInterval(add, 2600); setTimeout(add, 900);
+  }
+
   /* ---- Live conversation demo: messages appear one by one with a typing indicator.
      Runs only while on screen; reduced motion or no JS shows the full conversation. ---- */
   function initChatDemo() {
@@ -993,7 +1021,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

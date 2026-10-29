@@ -1862,3 +1862,26 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 
 /* CSS hero pieces carry their own opacity animations, so hide them outright once the 3D scene is running */
 .core-stage.is-3d > .task, .core-stage.is-3d > .beams, .core-stage.is-3d > .core { visibility: hidden; animation: none; }
+
+/* ---- V15: hero live automation feed --------------------------------------------- */
+.live-feed { position: relative; z-index: 4; width: min(100%, 340px); margin: 18px auto 0; padding: 12px; border-radius: 20px; background: rgba(10,10,12,.88); border: 1px solid var(--line-strong); box-shadow: 0 30px 60px -30px rgba(var(--rgb-glow), .7); }
+.lf-head { display: flex; align-items: center; gap: 8px; padding: 2px 4px 10px; font-size: .8rem; }
+.lf-head b { color: #fff; font-weight: 600; }
+.lf-head small { margin-left: auto; font-size: .7rem; color: var(--faint); border: 1px solid var(--line); padding: 1px 8px; border-radius: 100px; }
+.lf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.lf-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: #141416; border: 1px solid transparent; }
+.lf-row.is-new { animation: lfIn .45s var(--ease) both; border-color: rgba(var(--rgb-blue), .45); }
+.lf-row.is-done { border-color: transparent; transition: border-color .6s; }
+.lf-ic { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: rgba(var(--rgb-blue), .16); color: var(--accent); font-size: .9rem; }
+.lf-txt { min-width: 0; flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
+.lf-txt b { font-size: .78rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lf-txt > span { font-size: .74rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lf-meta { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-variant-numeric: tabular-nums; }
+.lf-time { font-size: .68rem; color: var(--faint); }
+.lf-status { display: inline-flex; align-items: center; gap: 4px; font-size: .72rem; font-weight: 600; color: var(--amber); }
+.lf-status .spin { width: 10px; height: 10px; border-width: 2px; }
+.lf-row.is-done .lf-status { color: #4ade80; }
+@keyframes lfIn { from { opacity: 0; transform: translateY(-10px) scale(.97); } }
+@media (min-width: 992px) { .hero--v7 .live-feed { position: absolute; right: calc(2vw + 4px); bottom: 26px; margin: 0; } }
+@media (min-width: 1400px) { .hero--v7 .live-feed { right: 4vw; } }
+@media (prefers-reduced-motion: reduce) { .lf-row.is-new { animation: none; } }
