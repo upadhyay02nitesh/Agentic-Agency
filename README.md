@@ -12,7 +12,7 @@ Serve the folder (needed for the self-hosted font; opening files directly shows 
 python -m http.server 8080      # then open http://localhost:8080
 ```
 
-Bootstrap (CSS + JS) and Bootstrap Icons are self-hosted in `assets/vendor/`, Montserrat in `assets/fonts/`; only GSAP loads from a CDN (cdnjs), so the homepage animations need internet.
+Bootstrap (CSS + JS) and Bootstrap Icons are self-hosted in `assets/vendor/`, Montserrat in `assets/fonts/`; GSAP loads from cdnjs only on desktop when the presentation starts; Three.js is self-hosted (`assets/vendor/three.module.min.js`) and loaded only for the 3D globe.
 
 ## Pages and structure
 
@@ -93,6 +93,13 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - Tighter hero (smaller headline, less padding; hero and industry strip fit one screen), tighter section spacing and a ~30% shorter conversation demo.
 - **AI email assistant:** new 9th solution slide, a "Drowning in email" choice in the problem picker, a demo email conversation, and an add-on plan (`CONFIG.packages.email`, sample price $990 setup + $99/month, maintenance included) shown under the packages on the homepage and pricing page.
 - The conversation demo now has **10 businesses** (salon, clinic, hotel, restaurant, real estate, plumber, law firm, gym, online store, email); the industry strip lists 28 business types.
+
+## V13: "Worldwide" section with a 3D globe
+
+- New homepage section `#worldwide` ("One team. Every time zone."): a draggable 3D globe (`js/globe.js`, Three.js r160) with **41 countries in 8 regions** (North America, Caribbean, South America, UK & Europe, Middle East, Africa, Asia, Australia & NZ), pulsing markers, arcs that draw from "Our team" to every market, a tilted orbit ring and labels for the countries facing you. Below it, every country is listed by region, with a note that we work with any country.
+- **Honest stats only:** 24/7, 30+ languages, daily overlap with the client’s hours, reply within one business day (from `CONFIG.responseTime`). No "countries served" or "happy clients" counts.
+- **Loading:** the globe module and Three.js load only on screens ≥ 768px with WebGL and motion allowed, when the section is near the viewport; it renders only while visible. Everyone else sees a static SVG globe (same markers, real orthographic projection). Country data lives in the `#globe-data` JSON in `index.html`.
+- **Speed:** GSAP is no longer in the page head; `present.js` loads it only on desktop when the presentation starts, so phones never download it. Light beams in the hero are off on phones. Lighthouse (compressed): mobile 86, desktop 100; accessibility, best practices, SEO 100.
 
 ## Design tokens (`:root` in `css/style.css`)
 

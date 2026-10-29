@@ -901,6 +901,21 @@
     t = setTimeout(tick, 1900);
   }
 
+  /* ---- 3D globe: loads js/globe.js (Three.js) only on screens >= 768px with WebGL and motion allowed,
+     when the section comes near the viewport. Otherwise the static SVG globe stays. ---- */
+  function initGlobe() {
+    var st = $('[data-globe]'), data = $('#globe-data'); if (!st || !data) return;
+    var gl = false;
+    try { var cv = document.createElement('canvas'); gl = !!(cv.getContext('webgl2') || cv.getContext('webgl')); } catch (e) {}
+    if (reduceMotion || !gl || !window.matchMedia('(min-width: 768px)').matches || !('IntersectionObserver' in window)) return;
+    var d = JSON.parse(data.textContent);
+    var io = new IntersectionObserver(function (en) {
+      if (!en[0].isIntersecting) return; io.disconnect();
+      import('./globe.js').then(function (m) { m.initGlobe(st, d.places, d.hub); }).catch(function (err) { if (window.console) console.warn('Globe fallback:', err && err.message); });
+    }, { rootMargin: '400px' });
+    io.observe(st);
+  }
+
   /* ---- Live conversation demo: messages appear one by one with a typing indicator.
      Runs only while on screen; reduced motion or no JS shows the full conversation. ---- */
   function initChatDemo() {
@@ -957,7 +972,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

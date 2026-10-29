@@ -130,31 +130,50 @@
   simpleCounters();
   // Build on the first scroll / key / touch so page load stays light (the page looks the same until then).
   // Deep links (#contact) or a reload part-way down build at once and re-align to the target.
-  var started = false, evs = ['scroll', 'wheel', 'keydown', 'pointerdown', 'touchstart'];
+  var started = false, loaded = false, evs = ['scroll', 'wheel', 'keydown', 'pointerdown', 'touchstart'];
+  // GSAP is only needed for the desktop presentation, so phones and reduced-motion visitors never download it.
+  var wantPres = window.matchMedia('(min-width: 992px) and (prefers-reduced-motion: no-preference)');
+  var GSAP_URLS = ['https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'];
+  function loadGsap(cb) {
+    if (window.gsap && window.ScrollTrigger) { cb(); return; }
+    var i = 0;
+    (function next() {
+      if (i >= GSAP_URLS.length) { cb(); return; }
+      var sc = document.createElement('script'); sc.src = GSAP_URLS[i++]; sc.onload = next;
+      sc.onerror = function () { if (window.console) console.warn('Presentation mode unavailable (GSAP did not load); static slides stay.'); };
+      document.head.appendChild(sc);
+    })();
+  }
   function start() {
     if (started) return; started = true;
     evs.forEach(function (e) { window.removeEventListener(e, start, { passive: true }); });
-    // Building the pins adds height above anything below them and GSAP may reset the scroll on refresh, so remember
-    // what the visitor was looking at (an anchor, or the element at the top of the screen) and put them back there.
-    var tgt = location.hash && document.getElementById(location.hash.slice(1)), ref = null, refTop = 0;
-    if (!tgt && window.pageYOffset > 2) {
-      ref = document.elementFromPoint(window.innerWidth / 2, 90);
-      while (ref && ref.parentElement && ref.parentElement !== document.body && !/^(SECTION|ARTICLE|LI)$/.test(ref.tagName)) ref = ref.parentElement;
-      if (ref) refTop = ref.getBoundingClientRect().top;
-    }
-    function restore() {
-      if (tgt) tgt.scrollIntoView();
-      else if (ref) window.scrollBy(0, ref.getBoundingClientRect().top - refTop);
-    }
-    present();
-    restore();
-    if (window.ScrollTrigger && (tgt || ref)) {
-      var once = function () { window.ScrollTrigger.removeEventListener('refresh', once); restore(); };
-      window.ScrollTrigger.addEventListener('refresh', once);
-      setTimeout(restore, 120);
-    }
+    if (!wantPres.matches) { started = false; return; }        // phones / reduced motion: static cards, no GSAP
+    loadGsap(function () {
+      if (loaded) return; loaded = true;
+      // Building the pins adds height above anything below them and GSAP may reset the scroll on refresh, so remember
+      // what the visitor is looking at right now (an anchor, or the element at the top of the screen) and put them back.
+      var tgt = location.hash && document.getElementById(location.hash.slice(1)), ref = null, refTop = 0;
+      if (!tgt && window.pageYOffset > 2) {
+        ref = document.elementFromPoint(window.innerWidth / 2, 90);
+        while (ref && ref.parentElement && ref.parentElement !== document.body && !/^(SECTION|ARTICLE|LI)$/.test(ref.tagName)) ref = ref.parentElement;
+        if (ref) refTop = ref.getBoundingClientRect().top;
+      }
+      function restore() {
+        if (tgt) tgt.scrollIntoView();
+        else if (ref) window.scrollBy(0, ref.getBoundingClientRect().top - refTop);
+      }
+      present();
+      restore();
+      if (window.ScrollTrigger && (tgt || ref)) {
+        var once = function () { window.ScrollTrigger.removeEventListener('refresh', once); restore(); };
+        window.ScrollTrigger.addEventListener('refresh', once);
+        setTimeout(restore, 120);
+      }
+    });
   }
+  if (wantPres.addEventListener) wantPres.addEventListener('change', function (e) { if (e.matches && !loaded) start(); });
   function arm() {
+    if (!wantPres.matches) return;
     if (window.pageYOffset > 40 || location.hash) { start(); return; }
     evs.forEach(function (e) { window.addEventListener(e, start, { passive: true }); });
   }
