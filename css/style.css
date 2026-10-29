@@ -1769,3 +1769,38 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 
 .core-count { visibility: hidden; }   /* space is reserved from the first paint, so showing it never shifts the page */
 .core-count.on { visibility: visible; }
+
+/* ---- V12: more compact hero, sections and conversation demo ---------------------- */
+:root { --section-y: clamp(48px, 6vw, 88px); }
+.hero--v7 { min-height: 0; padding: calc(var(--nav-h) + 28px) 0 40px; }
+.hero--v7 h1 { font-size: clamp(2rem, 4.1vw, 3.3rem); line-height: 1.06; margin: 14px 0 16px; max-width: 17ch; }
+.hero--v7 .lead { font-size: clamp(.98rem, 1.3vw, 1.08rem); max-width: 500px; margin-bottom: 22px; }
+.hero--v7 .badge-nx { padding: 6px 12px; }
+.core-count { margin-top: 14px; padding: 6px 12px; font-size: .8rem; }
+.hero--v7 .hero-meta { margin-top: 16px; }
+@media (min-width: 992px) {
+  .hero--v7 { min-height: 640px; display: flex; align-items: center; }
+  .hero--v7 .core-stage { width: 44%; height: 500px; }
+}
+.ind-strip { padding: 10px 0 20px; }
+.section-head { margin-bottom: clamp(22px, 3.5vw, 40px); }
+.section-title { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+.chat-demo { gap: 22px; margin: 20px 0 6px; padding: clamp(18px, 3vw, 30px); border-radius: 28px; }
+.chat-demo-txt h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
+.chat-demo-txt p { font-size: .95rem; margin-bottom: 10px; }
+.chat-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; border: 0; background: none; border-radius: 0; }
+.chat-tabs button { min-height: 40px; padding: 0 12px; font-size: .82rem; border: 1px solid var(--line-strong); }
+.phone-frame { width: min(100%, 320px); padding: 12px; border-radius: 28px; }
+.convo-top { padding: 4px 4px 10px; }
+.convo-msgs { height: 260px; padding: 10px 2px 4px; gap: 6px; }
+.msg span { font-size: .82rem; padding: 8px 12px; }
+.convo-note { font-size: .76rem; padding-top: 8px; margin-top: 6px; }
+@media (min-width: 992px) { .chat-demo { grid-template-columns: 1.1fr .9fr; gap: 36px; } }
+@media (max-width: 575.98px) {
+  .chat-tabs { flex-wrap: nowrap; overflow-x: auto; margin: 0 -18px; padding: 2px 18px 6px; scrollbar-width: none; }
+  .chat-tabs::-webkit-scrollbar { display: none; }
+  .chat-tabs button { flex: none; }
+}
+.exp-steps li { padding: 20px; }
+.exp-steps li > i { width: 44px; height: 44px; margin-bottom: 12px; font-size: 1.15rem; }
+@media (min-width: 992px) { .pkg-more--3 { grid-template-columns: repeat(3, 1fr); } }

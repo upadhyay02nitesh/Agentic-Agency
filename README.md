@@ -88,6 +88,12 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Hero animation:** tasks fly in along light beams, fade before the core (no pile-up), come out done along magenta beams; a rotating halo; the core pulses on every task; a demo counter shows tasks handled while the visitor reads (counts the animation, labelled "(demo)").
 - **Speed:** Bootstrap and Bootstrap Icons are self-hosted (no extra domains before first paint), the icon CSS loads without blocking and icons reserve their 1em box. Measured with compression (Lighthouse 12): mobile 85 performance (FCP 2.6 s, CLS 0.009), desktop 99; accessibility, best practices and SEO 100 on both.
 
+## V12: compact homepage + AI email assistant
+
+- Tighter hero (smaller headline, less padding; hero and industry strip fit one screen), tighter section spacing and a ~30% shorter conversation demo.
+- **AI email assistant:** new 9th solution slide, a "Drowning in email" choice in the problem picker, a demo email conversation, and an add-on plan (`CONFIG.packages.email`, sample price $990 setup + $99/month, maintenance included) shown under the packages on the homepage and pricing page.
+- The conversation demo now has **10 businesses** (salon, clinic, hotel, restaurant, real estate, plumber, law firm, gym, online store, email); the industry strip lists 28 business types.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.

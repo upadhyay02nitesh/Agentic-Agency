@@ -36,7 +36,8 @@
       chat:     { setup: 1490, monthly: 149 },
       voice:    { setup: 2490, monthly: 349 },
       followup: { setup: 1990, monthly: 199 },
-      growth:   { setup: 5900, monthly: 590 }
+      growth:   { setup: 5900, monthly: 590 },
+      email:    { setup: 990,  monthly: 99 }     // AI Email Assistant add-on
     },
     // Proof section on the homepage. Stays hidden until you add REAL entries. Never invent these.
     // results:      [{ value: '32 h', label: 'saved per week at a 6-person clinic' }]
