@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /404.html
 
-Sitemap: https://www.example.com/sitemap.xml
+Sitemap: https://www.nextgenailabs.com/sitemap.xml

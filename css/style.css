@@ -2004,3 +2004,29 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 @media (max-width: 767.98px) { .device-toggle { display: none; } .device-screen { height: 560px; } }
 @media (prefers-reduced-motion: reduce) { .ah-wave i { animation: none; } .msg.is-live, .quick button { animation: none; } }
 @media (max-width: 767.98px) { .composer input { font-size: 16px; } }   /* iOS zooms the page on inputs smaller than 16px */
+
+/* ---- V18: guides (blog) ------------------------------------------------------------ */
+.post-hero h1 { max-width: 24ch; text-transform: none; font-size: clamp(1.9rem, 4.2vw, 3rem); letter-spacing: -.03em; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; font-size: .82rem; color: var(--faint); }
+.crumbs a { color: var(--muted); } .crumbs a:hover { color: #fff; }
+.post-meta { font-size: .84rem; color: var(--faint); margin-top: 10px; }
+.post-wrap { display: grid; gap: 28px; padding-bottom: 40px; }
+@media (min-width: 992px) { .post-wrap { grid-template-columns: 240px minmax(0, 720px); gap: 56px; } .post-toc { position: sticky; top: calc(var(--nav-h) + 20px); align-self: start; } }
+.post-toc { padding: 18px; border-radius: 18px; background: #0b0b0c; border: 1px solid var(--line); font-size: .86rem; }
+.post-toc b { display: block; color: #fff; margin-bottom: 8px; }
+.post-toc ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.post-toc a { color: var(--muted); } .post-toc a:hover { color: var(--accent); }
+.prose { font-size: 1.04rem; line-height: 1.75; color: var(--muted); }
+.prose h2 { font-size: clamp(1.35rem, 2.6vw, 1.75rem); text-transform: none; letter-spacing: -.02em; margin: 40px 0 12px; color: #fff; scroll-margin-top: calc(var(--nav-h) + 16px); }
+.prose h2:first-child { margin-top: 0; }
+.prose h3 { font-size: 1.1rem; margin: 22px 0 6px; color: #fff; }
+.prose p, .prose ul, .prose ol { margin: 0 0 16px; }
+.prose li { margin-bottom: 6px; } .prose b { color: #fff; }
+.prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.post-cta { margin: 32px 0; padding: 22px; border-radius: 20px; background: linear-gradient(140deg, rgba(var(--rgb-glow), .18), #0b0b0c 70%); border: 1px solid var(--line-strong); }
+.post-cta b { display: block; color: #fff; font-size: 1.1rem; margin-bottom: 4px; }
+.post-cta p { margin-bottom: 14px; } .post-cta .btn-text { color: #fff; text-decoration: none; }
+.post-cta .btn-nx { text-decoration: none; color: var(--ink); }
+.more-h { font-size: 1.2rem !important; } .more-list { padding-left: 18px; }
+.guide-list { list-style: none; padding: 0; }
+.guide-h { font-size: 1.12rem; text-transform: none; letter-spacing: -.01em; line-height: 1.3; margin: 0; color: #fff; }
