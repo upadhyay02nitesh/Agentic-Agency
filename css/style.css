@@ -1845,3 +1845,20 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 .reg p { margin: 0; font-size: .86rem; line-height: 1.5; }
 
 @media (max-width: 767.98px) { .beams { display: none; } }   /* phones: skip the animated light beams (costly to redraw, tiny on screen) */
+
+/* ---- V14: 3D hero (js/hero3d.js) ------------------------------------------------- */
+.core-stage > * { transition: opacity .9s var(--ease); }
+.core-stage.is-3d > :not(.hero3d-canvas):not(.hero3d-labels) { opacity: 0; }
+.hero3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; animation: h3In 1.1s .1s var(--ease) forwards; }
+.hero3d-labels { position: absolute; inset: 0; pointer-events: none; }
+.h3-chip { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 100px; background: rgba(10,10,12,.86); border: 1px solid var(--line-strong);
+  color: #fff; font-size: .8rem; white-space: nowrap; opacity: 0; will-change: transform, opacity; box-shadow: 0 12px 30px -14px rgba(0,0,0,.9); }
+.h3-chip b { font-weight: 500; }
+.h3-chip i { color: var(--muted); }
+.h3-chip.is-done { border-color: rgba(var(--rgb-blue), .65); box-shadow: 0 0 24px -6px rgba(var(--rgb-blue), .85); }
+.h3-chip.is-done i { color: #4ade80; }
+@keyframes h3In { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+@media (min-width: 992px) { .hero--v7 .core-stage { height: 560px; } }
+
+/* CSS hero pieces carry their own opacity animations, so hide them outright once the 3D scene is running */
+.core-stage.is-3d > .task, .core-stage.is-3d > .beams, .core-stage.is-3d > .core { visibility: hidden; animation: none; }

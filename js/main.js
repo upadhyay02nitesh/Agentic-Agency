@@ -916,6 +916,27 @@
     io.observe(st);
   }
 
+  /* ---- 3D hero: on desktop with WebGL and motion allowed, js/hero3d.js (Three.js) replaces the CSS core
+     after the first pointer move / scroll / key (or 3.5 s), so the first paint stays light. ---- */
+  function initHero3D() {
+    var stage = $('.hero--v7 .core-stage'); if (!stage || reduceMotion || !window.matchMedia('(min-width: 992px)').matches) return;
+    var gl = false; try { var cv = document.createElement('canvas'); gl = !!(cv.getContext('webgl2') || cv.getContext('webgl')); } catch (e) {}
+    if (!gl) return;
+    var ins = $$('.task:not(.task--done)', stage), outs = $$('.task--done', stage);
+    var pairs = ins.map(function (el, i) {
+      var ic = ($('i', el) || { className: '' }).className.replace(/\bbi\b/, '').trim();
+      return { task: el.getAttribute('data-label'), done: outs[i] ? outs[i].getAttribute('data-label') : 'Done', icon: ic || 'bi-lightning' };
+    });
+    var evs = ['pointermove', 'scroll', 'keydown', 'touchstart'], fired = false;
+    function go() {
+      if (fired) return; fired = true;
+      evs.forEach(function (e) { window.removeEventListener(e, go); });
+      import('./hero3d.js').then(function (mod) { mod.initHero3D(stage, pairs); }).catch(function (err) { if (window.console) console.warn('3D hero fallback:', err && err.message); });
+    }
+    evs.forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
+    setTimeout(go, 3500);
+  }
+
   /* ---- Live conversation demo: messages appear one by one with a typing indicator.
      Runs only while on screen; reduced motion or no JS shows the full conversation. ---- */
   function initChatDemo() {
@@ -972,7 +993,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

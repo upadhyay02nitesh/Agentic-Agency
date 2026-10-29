@@ -101,6 +101,11 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Loading:** the globe module and Three.js load only on screens ≥ 768px with WebGL and motion allowed, when the section is near the viewport; it renders only while visible. Everyone else sees a static SVG globe (same markers, real orthographic projection). Country data lives in the `#globe-data` JSON in `index.html`.
 - **Speed:** GSAP is no longer in the page head; `present.js` loads it only on desktop when the presentation starts, so phones never download it. Light beams in the hero are off on phones. Lighthouse (compressed): mobile 86, desktop 100; accessibility, best practices, SEO 100.
 
+## V14: 3D hero
+
+- On desktop (≥ 992px, WebGL, motion allowed) `js/hero3d.js` replaces the CSS hero core with a Three.js scene: an animated energy sphere with a fresnel rim and glow, two wireframe shells, three tilted orbit rings with satellites, particle streams spiralling into the core and shooting out, and task chips that orbit in 3D, dive into the core (which pulses) and fly back out as "done" on a higher path. The scene tilts toward the pointer.
+- It loads on the first pointer move, scroll or key press, or after 3.5 s, so the first paint stays light; renders only while on screen. Phones, reduced motion and no-WebGL keep the CSS hero.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.
