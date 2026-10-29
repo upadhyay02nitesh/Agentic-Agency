@@ -965,34 +965,96 @@
     setInterval(add, 2600); setTimeout(add, 900);
   }
 
-  /* ---- Live conversation demo: messages appear one by one with a typing indicator.
-     Runs only while on screen; reduced motion or no JS shows the full conversation. ---- */
+  /* ---- Interactive device demo: a realistic phone (or tablet inbox) where demo conversations play out with
+     typing status, then the visitor can tap a suggested reply or type their own; the AI answers with scripted,
+     keyword-matched replies (clearly labelled as a demo). Plays only while on screen; static without JS. ---- */
   function initChatDemo() {
     var box = $('[data-chat-demo]'); if (!box) return;
-    var panels = $$('[data-convo-panel]', box), btns = $$('[data-convo]', box), cur = 0, timers = [], visible = false, auto = true, started = false;
+    var device = $('.device', box), panels = $$('[data-convo-panel]', box), tabs = $$('[data-convo]', box), devBtns = $$('[data-device-set]', box);
+    var quick = $('[data-quick-box]', box), form = $('[data-composer]', box), input = $('input', form), note = $('[data-demo-note] span', box);
+    var cur = 0, timers = [], visible = false, auto = true, started = false, busy = false;
     box.classList.add('js-chat');
-    function clear() { timers.forEach(clearTimeout); timers = []; }
+    function clear() { timers.forEach(clearTimeout); timers = []; busy = false; }
     function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+    function clock() { var d = new Date(), h = d.getHours() % 12 || 12, m = d.getMinutes(); return h + ':' + (m < 10 ? '0' : '') + m; }
+    function now12() { var d = new Date(), h = d.getHours(), m = d.getMinutes(); return ((h % 12) || 12) + ':' + (m < 10 ? '0' : '') + m + (h >= 12 ? ' PM' : ' AM'); }
+    $$('[data-clock]', box).forEach(function (c) { c.textContent = clock(); });
+    setInterval(function () { $$('[data-clock]', box).forEach(function (c) { c.textContent = clock(); }); }, 30000);
+    function panel() { return panels[cur]; }
+    function list(p) { return $('.convo-msgs', p); }
+    function scroll(p) { var l = list(p); l.scrollTop = l.scrollHeight; }
+    function status(p, typing) {
+      var st = $('[data-status]', p), ch = p.getAttribute('data-channel'); if (!st || ch === 'call' || ch === 'email') return;
+      if (!st.getAttribute('data-idle')) st.setAttribute('data-idle', st.textContent);
+      st.textContent = typing ? 'typing…' : st.getAttribute('data-idle'); st.classList.toggle('is-typing', typing);
+    }
+    function typingOn(p, on) { var ty = $('.msg--typing', p); ty.classList.toggle('on', on); status(p, on); if (on) scroll(p); }
+    function bubble(p, who, text) {
+      var ch = p.getAttribute('data-channel'), li = document.createElement('li'), t = esc(text), tm = now12(), name = p.getAttribute('data-name');
+      li.className = 'msg msg--' + who + ' on is-live';
+      if (ch === 'email') li.innerHTML = '<span class="mail-card"><span class="mail-from"><b>' + (who === 'in' ? 'You' : esc(name)) + '</b><small>' + tm + '</small></span>' + t + '</span>';
+      else if (ch === 'call') li.innerHTML = '<span><em>' + (who === 'in' ? 'You' : 'AI') + '</em>' + t + '</span>';
+      else li.innerHTML = '<span>' + t + '<small class="msg-meta">' + tm + (who === 'in' && ch === 'whatsapp' ? ' <i class="bi bi-check2-all" aria-hidden="true"></i>' : '') + '</small></span>';
+      list(p).insertBefore(li, $('.msg--typing', p)); scroll(p); return li;
+    }
+    function answer(text, p) {
+      var n = p.getAttribute('data-name'), x = text.toLowerCase();
+      if (/price|cost|how much|fee|\$|quote|per night|membership|charge/.test(x)) return 'Good question! Prices depend on exactly what you need. I can send you our price list now, or book a free 15-minute call with the team. Which would you prefer?';
+      if (/hour|open|close|when are you|time do you/.test(x)) return 'We’re open Monday to Saturday, 9 AM to 7 PM, and I’m here 24/7 to answer questions and take bookings.';
+      if (/insurance/.test(x)) return 'We work with most major insurance plans. If you share your provider, I’ll check it and note it on your booking.';
+      if (/book|appointment|table|slot|reserv|schedule|viewing|class|cleaning|friday|saturday|tomorrow/.test(x)) return 'I can book that for you. The next free times are tomorrow at 10:00 AM or 3:30 PM. Which works best?';
+      if (/human|person|staff|stylist|manager|attorney|coach|plumber|support|call me|call back|talk|speak/.test(x)) return 'Of course. I’ve asked the ' + n + ' team to call you back. During opening hours that’s usually within 15 minutes.';
+      if (/vegan|gluten|allerg|breakfast|parking|ship|return|emergenc|bring/.test(x)) return 'Yes, we can help with that. I’ve added a note for the team, and I’ll send you the details by text in a moment.';
+      if (/thank|thanks|great|perfect|ok|okay|cool/.test(x)) return 'You’re welcome! 😊 Anything else I can help with?';
+      return 'Thanks for your message! I’ve saved it for the ' + n + ' team. Is there anything I can book or check for you right now?';
+    }
+    function send(text) {
+      text = (text || '').trim(); if (!text || busy) return;
+      auto = false; clear(); busy = true;
+      var p = panel(); bubble(p, 'in', text); quick.innerHTML = '';
+      later(function () { typingOn(p, true); }, 450);
+      later(function () { typingOn(p, false); bubble(p, 'out', answer(text, p)); busy = false; renderQuick(p); }, 1700);
+    }
+    function renderQuick(p) {
+      var q = []; try { q = JSON.parse(p.getAttribute('data-quick') || '[]'); } catch (e) {}
+      quick.innerHTML = ''; q.forEach(function (t) { var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.addEventListener('click', function () { send(t); }); quick.appendChild(b); });
+      input.placeholder = p.getAttribute('data-channel') === 'email' ? 'Write a reply…' : p.getAttribute('data-channel') === 'call' ? 'Say something to the AI…' : 'Type a message…';
+    }
     function show(i, animate) {
       clear(); cur = i;
-      btns.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      tabs.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-convo') === panels[i].getAttribute('data-convo-panel') ? 'true' : 'false'); });
       panels.forEach(function (p, k) { p.hidden = k !== i; });
-      var p = panels[i], msgs = $$('.msg:not(.msg--typing)', p), typing = $('.msg--typing', p);
-      if (!animate || reduceMotion) { msgs.forEach(function (m) { m.classList.add('on'); }); typing.classList.remove('on'); return; }
+      var p = panels[i], msgs = $$('.msg:not(.msg--typing)', p);
+      $$('.is-live', p).forEach(function (m) { m.parentNode.removeChild(m); });     // drop the visitor's own messages from a previous visit
+      if (note) note.textContent = p.getAttribute('data-note');
+      quick.innerHTML = '';
+      if (!animate || reduceMotion) { msgs.forEach(function (m) { m.classList.add('on'); }); typingOn(p, false); renderQuick(p); scroll(p); return; }
       msgs.forEach(function (m) { m.classList.remove('on'); });
-      var t = 400;
+      var t = 450;
       msgs.forEach(function (m) {
-        if (m.classList.contains('msg--out')) { later(function () { typing.classList.add('on'); }, t); t += 1100; }
-        later(function () { typing.classList.remove('on'); m.classList.add('on'); }, t); t += 1000;
+        if (m.classList.contains('msg--out')) { later(function () { typingOn(p, true); }, t); t += 1100; }
+        later(function () { typingOn(p, false); m.classList.add('on'); scroll(p); }, t); t += 950;
       });
-      later(function () { if (auto && visible && !document.hidden) show((cur + 1) % panels.length, true); }, t + 2800);
+      later(function () { renderQuick(p); }, t);
+      later(function () { if (auto && visible && !document.hidden) show((cur + 1) % panels.length, true); }, t + 4200);
     }
-    btns.forEach(function (b, k) { b.addEventListener('click', function () { auto = false; show(k, true); }); });
+    tabs.forEach(function (b) { b.addEventListener('click', function () {
+      var k = b.getAttribute('data-convo'); auto = false;
+      panels.forEach(function (p, i) { if (p.getAttribute('data-convo-panel') === k) show(i, true); });
+    }); });
+    devBtns.forEach(function (b) { b.addEventListener('click', function () {
+      var d = b.getAttribute('data-device-set'); device.setAttribute('data-device', d); box.classList.toggle('is-tablet', d === 'tablet');
+      devBtns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); scroll(panel());
+    }); });
+    form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); input.value = ''; });
+    // call screen: running timer
+    var secs = 42; setInterval(function () { if (!visible) return; secs++; $$('[data-call-timer]', box).forEach(function (el) { el.textContent = (secs / 60 < 10 ? '0' : '') + Math.floor(secs / 60) + ':' + (secs % 60 < 10 ? '0' : '') + (secs % 60); }); }, 1000);
     show(0, false);
     if (!('IntersectionObserver' in window) || reduceMotion) return;
     new IntersectionObserver(function (en) {
       visible = en[0].isIntersecting;
-      if (visible && (!started || auto)) { started = true; show(cur, true); }
+      if (visible && !started) { started = true; show(cur, true); }
+      else if (visible && auto && !busy) show(cur, true);
       else if (!visible) { clear(); show(cur, false); }
     }, { threshold: .35 }).observe(box);
   }
