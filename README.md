@@ -120,6 +120,12 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Section navigator** (desktop ≥ 1200px): dots on the left edge with labels on hover/focus, current section highlighted, appears after the hero. Labels come from `data-nav-label` on each homepage section.
 - **Pointer effects** (mouse only, off under reduced motion): a soft magenta spotlight and gentle 3D tilt on dark cards, and magnetic primary buttons.
 
+## V20: phone experience
+
+- On phones the 9 AI-job slides and the 4 packages are **swipe carousels** (scroll-snap, peek of the next card, dots you can tap, a "Swipe →" hint that disappears after the first swipe). Tablets and desktops keep the stacked / pinned layouts.
+- **Sticky team summary** on phones while building an AI team ("3 selected · 14 h/week · See your plan"), shown only while the result card is off screen.
+- **Touch feedback:** buttons, cards, tabs and FAQ rows press in slightly when tapped; Android phones get a tiny vibration when an AI employee is added.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.

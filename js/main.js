@@ -1140,6 +1140,45 @@
     });
   }
 
+  /* ---- Phone UX: swipe carousels with dots + hint, sticky team summary, touch feedback ---- */
+  function initPhoneUx() {
+    var phone = window.matchMedia('(max-width: 767.98px)');
+    // swipe carousels: dots that follow the slide in view and jump on tap
+    $$('[data-swipe]').forEach(function (track) {
+      var items = Array.prototype.slice.call(track.children); if (items.length < 2) return;
+      var bar = document.createElement('div'); bar.className = 'swipe-ui';
+      bar.innerHTML = '<span class="swipe-hint" aria-hidden="true">Swipe <i class="bi bi-arrow-right"></i></span><span class="swipe-dots" role="group" aria-label="' + esc(track.getAttribute('data-swipe')) + '">' +
+        items.map(function (_, i) { return '<button type="button" aria-label="Show item ' + (i + 1) + ' of ' + items.length + '"></button>'; }).join('') + '</span>';
+      track.parentNode.insertBefore(bar, track.nextSibling);
+      var dots = $$('.swipe-dots button', bar);
+      function mark(i) { dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); }); }
+      dots.forEach(function (d, i) { d.addEventListener('click', function () { track.scrollTo({ left: items[i].offsetLeft - track.offsetLeft - 16, behavior: reduceMotion ? 'auto' : 'smooth' }); }); });
+      var t = 0;
+      track.addEventListener('scroll', function () {
+        bar.classList.add('used');
+        if (t) return; t = requestAnimationFrame(function () {
+          t = 0; var mid = track.scrollLeft + track.clientWidth / 2, best = 0, bd = 1e9;
+          items.forEach(function (it, i) { var c = it.offsetLeft - track.offsetLeft + it.offsetWidth / 2, dd = Math.abs(c - mid); if (dd < bd) { bd = dd; best = i; } });
+          mark(best);
+        });
+      }, { passive: true });
+      mark(0);
+    });
+    // sticky team summary while the result card is off screen
+    var tb = $('[data-team-bar]'), out = $('#team-result'), team = $('#team');
+    if (tb && out && team && 'IntersectionObserver' in window) {
+      var inTeam = false, outVis = false;
+      function show() { tb.classList.toggle('on', phone.matches && inTeam && !outVis); }
+      new IntersectionObserver(function (en) { inTeam = en[0].isIntersecting; show(); }, { threshold: 0.05 }).observe(team);
+      new IntersectionObserver(function (en) { outVis = en[0].isIntersecting; show(); }, { threshold: 0.25 }).observe(out);
+      var hEl = $('[data-team-hours]'), cards = $$('.tm-card');
+      function sync() { $('[data-team-bar-n]', tb).textContent = cards.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; }).length;
+        $('[data-team-bar-h]', tb).textContent = cards.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; }).reduce(function (a, c) { return a + +c.getAttribute('data-hours'); }, 0); }
+      cards.forEach(function (c) { c.addEventListener('click', function () { sync(); if (navigator.vibrate && phone.matches && !reduceMotion) { try { navigator.vibrate(8); } catch (e) {} } }); });
+      sync();
+    }
+  }
+
   /* ---- Effects bootstrap (below-fold canvases start only when near viewport) -- */
   function initEffects() {
     var FX = window.NextGenFX; if (!FX) return;
@@ -1164,7 +1203,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initTeamBuilder(); initSectionNav(); initPointerFx(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initTeamBuilder(); initSectionNav(); initPointerFx(); initPhoneUx(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

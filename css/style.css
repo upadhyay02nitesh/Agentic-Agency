@@ -2080,3 +2080,45 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 .fx-spot:hover::after { opacity: 1; }
 .btn-nx--primary { transition: transform .2s var(--ease), background .25s, border-color .25s, box-shadow .25s; }
 @media (prefers-reduced-motion: reduce) { .tm-card.pop .tm-ic, .tm-av, .tm-core { animation: none; } }
+
+/* ---- V20: phone UX --------------------------------------------------------------- */
+.swipe-ui { display: none; }
+@media (max-width: 767.98px) {
+  /* 9 AI jobs: horizontal swipe with a peek of the next slide */
+  .show-track[data-swipe] { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; padding: 0 16px 6px; margin: 0; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .show-track[data-swipe]::-webkit-scrollbar { display: none; }
+  .show-track[data-swipe] > .sslide { flex: 0 0 88%; scroll-snap-align: start; padding: 10px 0; }
+  .show-track[data-swipe] > .sslide > .container { padding: 0; width: 100%; max-width: none; }
+  .show-track[data-swipe] .sslide-grid { height: 100%; padding: 20px 18px; border-radius: 26px; }
+  /* packages: swipe with a peek */
+  .pkg-row[data-swipe] { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -20px; padding: 2px 20px 8px; scrollbar-width: none; --bs-gutter-x: 12px; }
+  .pkg-row[data-swipe]::-webkit-scrollbar { display: none; }
+  .pkg-row[data-swipe] > * { flex: 0 0 84%; max-width: 84%; scroll-snap-align: center; }
+  .swipe-ui { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0 0; padding: 0 16px; }
+  .panel .swipe-ui { padding: 0; }
+  .swipe-hint { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; color: var(--faint); transition: opacity .4s; }
+  .swipe-hint i { animation: hintNudge 1.4s ease-in-out infinite; }
+  .swipe-ui.used .swipe-hint { opacity: 0; }
+  .swipe-dots { display: flex; gap: 2px; }
+  .swipe-dots button { width: 22px; height: 28px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+  .swipe-dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.28); transition: width .25s var(--ease), background .25s; }
+  .panel .swipe-dots button::before { background: rgba(14,15,17,.22); }
+  .swipe-dots button[aria-current="true"]::before { width: 18px; border-radius: 6px; background: var(--accent); }
+  /* sticky team summary */
+  .tm-bar { position: sticky; z-index: 30; bottom: calc(var(--bar-h) + 10px); display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 0; padding: 10px 12px 10px 16px; border-radius: 100px;
+    background: rgba(14,15,17,.94); border: 1px solid rgba(var(--rgb-blue), .55); box-shadow: 0 16px 40px -14px rgba(0,0,0,.9); color: #fff; font-size: .86rem;
+    opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .25s, transform .25s var(--ease); }
+  .tm-bar.on { opacity: 1; transform: none; pointer-events: auto; }
+  .tm-bar b { color: var(--accent); }
+  .tm-bar a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 100px; background: var(--accent); color: var(--ink); font-weight: 600; font-size: .8rem; }
+  .tm { grid-template-columns: 1fr; }
+  .tm-grid { grid-template-columns: 1fr; }
+}
+@media (min-width: 768px) { .tm-bar { display: none; } }
+@keyframes hintNudge { 50% { transform: translateX(4px); } }
+/* touch feedback */
+@media (hover: none) {
+  .btn-nx:active, .tm-card:active, .help-tabs button:active, .chat-tabs button:active, .quick button:active, .seg button:active, .faq-q:active, .swipe-dots button:active { transform: scale(.97); }
+  .tm-card, .help-tabs button, .chat-tabs button, .faq-q { transition: transform .12s ease, border-color .25s, background .25s; }
+}
+@media (prefers-reduced-motion: reduce) { .swipe-hint i { animation: none; } }
