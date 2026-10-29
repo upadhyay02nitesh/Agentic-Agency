@@ -33,6 +33,7 @@
     founder: { name: '', role: 'Founder & GenAI engineer', bio: '', photo: '', linkedin: '', github: '' },
     // AI packages (home + pricing + industry pages). SAMPLE PRICES in USD: set your real ones.
     packages: {
+      lite:     { setup: 299,  monthly: 49 },     // AI Starter: simple website FAQ assistant for small budgets
       chat:     { setup: 1490, monthly: 149 },
       voice:    { setup: 2490, monthly: 349 },
       followup: { setup: 1990, monthly: 199 },
@@ -1107,6 +1108,7 @@
         if (has('voice')) { parts.push('AI Receptionist'); setup += P.voice.setup; mo += P.voice.monthly; }
         if (has('followup')) { parts.push('Lead Follow-up Engine'); setup += P.followup.setup; mo += P.followup.monthly; }
         if (has('email')) { parts.push('AI Email Assistant'); setup += P.email.setup; mo += P.email.monthly; }
+        if (keys.length === 1 && has('chat') && P.lite) { parts = ['AI Starter (or AI Chat Assistant for more)']; setup = P.lite.setup; mo = P.lite.monthly; }
         name = parts.join(' + '); }
       if (has('reports')) { custom = true; name = (name ? name + ' + ' : '') + 'Owner Reports'; }
       pName.textContent = name || 'Owner Reports';

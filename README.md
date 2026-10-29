@@ -132,6 +132,11 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - The enquiry form now **sends silently** through FormSubmit (`CONFIG.submitMethod: 'service'`) to sales@nextgenailabs.com, with a subject like "New enquiry from Sarah Lee (Bright Smile Dental): AI chatbot or agent", reply-to set to the customer, and an **automatic confirmation email** to the customer.
 - **Success screen** (only after FormSubmit confirms): animated check, the customer’s name, the three next steps, WhatsApp and email buttons, and a short confetti burst (off under reduced motion). On failure it offers WhatsApp and email instead; nothing claims success that did not happen.
 - **One-time setup:** the very first real submission makes FormSubmit email an activation link to sales@nextgenailabs.com. Click it once; after that, enquiries arrive normally. Check spam the first time.
+- The customer’s automatic “thanks for reaching out” email is sent by FormSubmit too, so it only works after activation and while formsubmit.co is up (it returned HTTP 521, server down, on 2026-10-29).
+
+## V22: AI Starter plan
+
+- New entry plan **AI Starter**: $299 setup + $49/month (`CONFIG.packages.lite`). It is a simple website FAQ assistant that sends enquiries to email. It shows as a strip above the package cards on the homepage and pricing page, appears in the pricing OfferCatalog JSON-LD and the service dropdown, and is what the team builder recommends when only the chat assistant is selected.
 
 ## Design tokens (`:root` in `css/style.css`)
 

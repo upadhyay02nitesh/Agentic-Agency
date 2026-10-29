@@ -2141,3 +2141,17 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 .confetti i { position: absolute; width: 8px; height: 12px; border-radius: 2px; opacity: 0; animation: conf 1.1s cubic-bezier(.2,.7,.3,1) forwards; }
 @keyframes conf { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), calc(var(--y) + 60px)) rotate(var(--r)); } }
 @media (prefers-reduced-motion: reduce) { .sent-card, .sent-steps li { animation: none; } .sent-check circle, .sent-check path { animation: none; stroke-dashoffset: 0; } }
+
+/* ---- V22: AI Starter strip ---------------------------------------------------------- */
+.lite { display: grid; gap: 18px; align-items: center; margin-bottom: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 24px; background: linear-gradient(120deg, #fdf5fe, #f3eefe); border: 2px dashed rgba(196, 0, 156, .45); color: var(--ink); }
+.lite-tag { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 4px; }
+.lite h3 { font-size: clamp(1.4rem, 2.6vw, 1.8rem); text-transform: uppercase; font-weight: 800; letter-spacing: -.02em; margin: 0 0 6px; color: var(--ink); }
+.lite p { margin: 0 0 12px; color: #47464a; }
+.lite-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px 18px; grid-template-columns: 1fr; font-size: .9rem; }
+.lite-list i { color: var(--accent-ink); margin-right: 6px; }
+.lite-price { padding: 18px; border-radius: 18px; background: #fff; text-align: center; }
+.lite-price small { display: block; font-size: .76rem; color: #646367; }
+.lite-price > b { display: block; font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1.05; color: var(--ink); }
+.lite-price > span { display: block; margin-bottom: 12px; color: #47464a; } .lite-price > span b { color: var(--ink); }
+@media (min-width: 576px) { .lite-list { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 992px) { .lite { grid-template-columns: 1.6fr .7fr; gap: 32px; } }
