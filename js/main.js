@@ -1059,6 +1059,87 @@
     }, { threshold: .35 }).observe(box);
   }
 
+  /* ---- Build-your-AI-team configurator: toggle AI employees, live hours/value, best plan, prefilled enquiry ---- */
+  function initTeamBuilder() {
+    var box = $('[data-team-builder]'); if (!box) return;
+    var cards = $$('.tm-card', box), av = $('[data-team-avatars]', box), hEl = $('[data-team-hours]', box), vEl = $('[data-team-value]', box);
+    var plan = $('[data-team-plan]', box), pName = $('[data-team-plan-name]', box), pPrice = $('[data-team-plan-price]', box), empty = $('[data-team-empty]', box), cta = $('[data-team-cta]', box);
+    var P = CONFIG.packages || {}, shown = { h: 0, v: 0 }, raf = 0;
+    function animate(h, v) {
+      var from = { h: shown.h, v: shown.v }, t0 = 0; cancelAnimationFrame(raf);
+      if (reduceMotion) { shown = { h: h, v: v }; hEl.textContent = h; vEl.textContent = formatMoney(v); return; }
+      raf = requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = Math.min(1, (t - t0) / 500), e = 1 - Math.pow(1 - k, 3);
+        shown.h = from.h + (h - from.h) * e; shown.v = from.v + (v - from.v) * e; hEl.textContent = Math.round(shown.h); vEl.textContent = formatMoney(shown.v); if (k < 1) raf = requestAnimationFrame(step); });
+    }
+    function update() {
+      var on = cards.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; }), keys = on.map(function (c) { return c.getAttribute('data-team'); });
+      var hours = on.reduce(function (a, c) { return a + +c.getAttribute('data-hours'); }, 0);
+      animate(hours, hours * 4.33 * 35);
+      av.innerHTML = on.map(function (c, i) { var a = 2 * Math.PI * i / Math.max(on.length, 1) - Math.PI / 2;
+        return '<span class="tm-av" style="--x:' + (Math.cos(a) * 62).toFixed(1) + 'px;--y:' + (Math.sin(a) * 62).toFixed(1) + 'px">' + $('.tm-ic', c).innerHTML + '</span>'; }).join('');
+      empty.hidden = on.length > 0; plan.hidden = !on.length;
+      var has = function (k) { return keys.indexOf(k) > -1; }, growthish = ['chat', 'followup', 'booking', 'reviews'].filter(has).length;
+      var name, setup = 0, mo = 0, custom = false;
+      if (growthish >= 3 || (has('booking') || has('reviews'))) { name = 'Growth Bundle'; setup = P.growth.setup; mo = P.growth.monthly;
+        if (has('voice')) { name += ' + AI Receptionist'; setup += P.voice.setup; mo += P.voice.monthly; }
+        if (has('email')) { name += ' + Email Assistant'; setup += P.email.setup; mo += P.email.monthly; } }
+      else { var parts = [];
+        if (has('chat')) { parts.push('AI Chat Assistant'); setup += P.chat.setup; mo += P.chat.monthly; }
+        if (has('voice')) { parts.push('AI Receptionist'); setup += P.voice.setup; mo += P.voice.monthly; }
+        if (has('followup')) { parts.push('Lead Follow-up Engine'); setup += P.followup.setup; mo += P.followup.monthly; }
+        if (has('email')) { parts.push('AI Email Assistant'); setup += P.email.setup; mo += P.email.monthly; }
+        name = parts.join(' + '); }
+      if (has('reports')) { custom = true; name = (name ? name + ' + ' : '') + 'Owner Reports'; }
+      pName.textContent = name || 'Owner Reports';
+      pPrice.textContent = (setup ? 'From ' + formatMoney(setup) + ' setup + ' + formatMoney(mo) + '/month' : '') + (custom ? (setup ? ' · reports quoted on the call' : 'Fixed quote after a free call') : '');
+      var names = on.map(function (c) { return $('b', c).textContent; }).join(', ');
+      cta.href = 'contact.html?service=' + encodeURIComponent('My AI team: ' + (names || 'not sure yet')) + '#enquiry';
+    }
+    cards.forEach(function (c) { c.addEventListener('click', function () {
+      var on = c.getAttribute('aria-pressed') !== 'true'; c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on && !reduceMotion) { c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); }
+      update(); }); });
+    ['chat', 'voice'].forEach(function (k) { var c = $('[data-team="' + k + '"]', box); if (c) c.setAttribute('aria-pressed', 'true'); });   // a sensible starting team
+    update();
+  }
+
+  /* ---- Section navigator (desktop): dots on the left edge, label on hover/focus, current section highlighted ---- */
+  function initSectionNav() {
+    var secs = $$('main section[data-nav-label]'); if (secs.length < 4 || !window.matchMedia('(min-width: 1200px)').matches) return;
+    var nav = document.createElement('nav'); nav.className = 'sec-nav'; nav.setAttribute('aria-label', 'Page sections');
+    nav.innerHTML = '<ol>' + secs.map(function (s) { return '<li><a href="#' + s.id + '"><span class="sn-dot" aria-hidden="true"></span><span class="sn-l">' + esc(s.getAttribute('data-nav-label')) + '</span></a></li>'; }).join('') + '</ol>';
+    document.body.appendChild(nav);
+    var links = $$('a', nav), hero = $('.hero');
+    var ticking = false;
+    function upd() {
+      ticking = false; var mid = window.innerHeight * 0.4, cur = -1;
+      secs.forEach(function (s, i) { if (s.getBoundingClientRect().top < mid) cur = i; });
+      links.forEach(function (a, i) { if (i === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+      nav.classList.toggle('on', !hero || hero.getBoundingClientRect().bottom < 80);
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    upd();
+  }
+
+  /* ---- Pointer spotlight + gentle 3D tilt on dark cards, and magnetic primary buttons (fine pointer only) ---- */
+  function initPointerFx() {
+    if (!canHover || reduceMotion) return;
+    $$('.why-card, .tech-card, .ind-card, .reg, .tm-card, .exp-steps li, .globe-stats li').forEach(function (el) {
+      el.classList.add('fx-spot'); var raf = 0;
+      el.addEventListener('pointermove', function (e) {
+        if (raf) return;
+        raf = requestAnimationFrame(function () { raf = 0; var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+          el.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); el.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+          el.style.transform = 'perspective(800px) rotateX(' + ((0.5 - y) * 5).toFixed(2) + 'deg) rotateY(' + ((x - 0.5) * 6).toFixed(2) + 'deg) translateY(-3px)'; });
+      });
+      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+    $$('.hero .btn-nx--primary, .cta-section .btn-nx--primary, .tm-out .btn-nx--primary, .help-actions .btn-nx--primary').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) { var r = b.getBoundingClientRect(); b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.25).toFixed(1) + 'px)'; });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+  }
+
   /* ---- Effects bootstrap (below-fold canvases start only when near viewport) -- */
   function initEffects() {
     var FX = window.NextGenFX; if (!FX) return;
@@ -1083,7 +1164,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initTeamBuilder(); initSectionNav(); initPointerFx(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

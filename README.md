@@ -114,6 +114,12 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Guides** (`guides.html` + 5 articles): AI receptionist cost, stopping missed calls, reducing no-shows, replying to leads fast, AI chatbots for small business websites. Plain English, sourced research only (HBR, Cochrane, a 14-hospital trial), internal links to the matching service pages. Add one new guide a month to keep growing organic traffic.
 - **Also:** new 1200×630 social share image (`assets/images/og-cover.png`), a `404.html` (noindex), and `vercel.json` with caching (fonts/vendor 1 year, images 30 days, CSS/JS 1 hour) and security headers.
 
+## V19: more interaction on the homepage
+
+- **Build your AI team** (`#team`, before the packages): tap any of 7 AI employees; their icons orbit an AI core, hours per week and monthly value count up (example at $35/h), the best plan and price are picked from `CONFIG.packages`, and "Get this team" pre-fills the enquiry form with the chosen team.
+- **Section navigator** (desktop ≥ 1200px): dots on the left edge with labels on hover/focus, current section highlighted, appears after the hero. Labels come from `data-nav-label` on each homepage section.
+- **Pointer effects** (mouse only, off under reduced motion): a soft magenta spotlight and gentle 3D tilt on dark cards, and magnetic primary buttons.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.
