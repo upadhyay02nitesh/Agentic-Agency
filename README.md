@@ -12,7 +12,7 @@ Serve the folder (needed for the self-hosted font; opening files directly shows 
 python -m http.server 8080      # then open http://localhost:8080
 ```
 
-Bootstrap, Bootstrap Icons and GSAP load from CDNs, so you need internet. Montserrat is self-hosted in `assets/fonts/`.
+Bootstrap (CSS + JS) and Bootstrap Icons are self-hosted in `assets/vendor/`, Montserrat in `assets/fonts/`; only GSAP loads from a CDN (cdnjs), so the homepage animations need internet.
 
 ## Pages and structure
 
@@ -79,6 +79,14 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **All-industries hub** (`industries.html`): 32 kinds of business in 8 groups (health, travel & hospitality, beauty & fitness, home services, professional services, property, retail, education & more), plus a "Don’t see your business?" section explaining the four jobs every business has.
 - **Research used** (only well-sourced findings): Harvard Business Review, "The Short Life of Online Sales Leads" (2011); Cochrane review of mobile phone appointment reminders; a 14-hospital reminder trial (npj Digital Medicine, 2020); Caribbean Hotel & Tourism Association Direct Booking Summit (2025). Vendor-only statistics (for example "62% of calls go unanswered") were deliberately left out.
 - **Measured (local http, Lighthouse 12, desktop):** home 98, hub 99, Caribbean page 99 performance; 100 accessibility, best practices and SEO on all three; CLS 0.
+
+## V10–V11: homepage that explains and attracts
+
+- **Industry strip** under the hero: a slow marquee of 18 business types with a link to all industries.
+- **Live conversation demo** inside "What is an AI employee?": a phone where demo conversations (salon booking at 9:40 PM, clinic reschedule, hotel transfer at 2:13 AM) type themselves out with a typing indicator. Runs only while on screen; reduced motion and no-JS show the full conversation. Names are made up and labelled as a demo.
+- **"What’s costing you the most time?"** picker: seven everyday problems (missed calls, cold leads, no-shows, repeat questions, paperwork, reviews, a website that doesn’t sell). Each shows the customer’s words, three plain steps for how we help, what changes, the recommended plan with its price and links to book or to see how it works. Swipeable row on phones; arrow keys work.
+- **Hero animation:** tasks fly in along light beams, fade before the core (no pile-up), come out done along magenta beams; a rotating halo; the core pulses on every task; a demo counter shows tasks handled while the visitor reads (counts the animation, labelled "(demo)").
+- **Speed:** Bootstrap and Bootstrap Icons are self-hosted (no extra domains before first paint), the icon CSS loads without blocking and icons reserve their 1em box. Measured with compression (Lighthouse 12): mobile 85 performance (FCP 2.6 s, CLS 0.009), desktop 99; accessibility, best practices and SEO 100 on both.
 
 ## Design tokens (`:root` in `css/style.css`)
 

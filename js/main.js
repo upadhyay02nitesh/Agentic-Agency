@@ -886,6 +886,52 @@
     sec.hidden = false;
   }
 
+  /* ---- Hero demo counter: counts the "done" chips the hero animation shows (one every 1.1 s).
+     Only while the hero is on screen and motion is allowed; labelled "(demo)" on the page. ---- */
+  function initTaskCounter() {
+    var el = $('[data-task-count]'), hero = $('.hero--v7'); if (!el || !hero || reduceMotion) return;
+    var b = $('b', el), n = 0, on = true, t = 0;
+    el.classList.add('on');
+    function tick() {
+      if (on && !document.hidden) { n++; b.textContent = n; b.classList.remove('tick'); void b.offsetWidth; b.classList.add('tick'); }
+      t = setTimeout(tick, 1100);
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { on = en[0].isIntersecting; }).observe(hero);
+    t = setTimeout(tick, 1900);
+  }
+
+  /* ---- Live conversation demo: messages appear one by one with a typing indicator.
+     Runs only while on screen; reduced motion or no JS shows the full conversation. ---- */
+  function initChatDemo() {
+    var box = $('[data-chat-demo]'); if (!box) return;
+    var panels = $$('[data-convo-panel]', box), btns = $$('[data-convo]', box), cur = 0, timers = [], visible = false, auto = true, started = false;
+    box.classList.add('js-chat');
+    function clear() { timers.forEach(clearTimeout); timers = []; }
+    function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+    function show(i, animate) {
+      clear(); cur = i;
+      btns.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      panels.forEach(function (p, k) { p.hidden = k !== i; });
+      var p = panels[i], msgs = $$('.msg:not(.msg--typing)', p), typing = $('.msg--typing', p);
+      if (!animate || reduceMotion) { msgs.forEach(function (m) { m.classList.add('on'); }); typing.classList.remove('on'); return; }
+      msgs.forEach(function (m) { m.classList.remove('on'); });
+      var t = 400;
+      msgs.forEach(function (m) {
+        if (m.classList.contains('msg--out')) { later(function () { typing.classList.add('on'); }, t); t += 1100; }
+        later(function () { typing.classList.remove('on'); m.classList.add('on'); }, t); t += 1000;
+      });
+      later(function () { if (auto && visible && !document.hidden) show((cur + 1) % panels.length, true); }, t + 2800);
+    }
+    btns.forEach(function (b, k) { b.addEventListener('click', function () { auto = false; show(k, true); }); });
+    show(0, false);
+    if (!('IntersectionObserver' in window) || reduceMotion) return;
+    new IntersectionObserver(function (en) {
+      visible = en[0].isIntersecting;
+      if (visible && (!started || auto)) { started = true; show(cur, true); }
+      else if (!visible) { clear(); show(cur, false); }
+    }, { threshold: .35 }).observe(box);
+  }
+
   /* ---- Effects bootstrap (below-fold canvases start only when near viewport) -- */
   function initEffects() {
     var FX = window.NextGenFX; if (!FX) return;
@@ -910,7 +956,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initProof(); initChatDemo(); initTaskCounter();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();
