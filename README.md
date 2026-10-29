@@ -71,6 +71,15 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 - **Font:** Montserrat is self-hosted (variable 400–800, latin + latin-ext) and preloaded, replacing the Google Fonts request. This removed a font-swap layout shift on long headings.
 - **Measured (local http, Lighthouse 12, desktop):** home 97 / 100 / 100 / 100, real-estate page 96 / 100 / 100 / 100; CLS 0.
 
+## V9: every industry, plain English, maintenance included
+
+- **Packages explained for non-technical buyers:** each plan opens with one plain sentence ("A receptionist that picks up every call…") and ends with "What you’ll notice". **Maintenance is included free** on the AI Receptionist, Lead Follow-up Engine and Growth Bundle (plans 2–4), and a box explains in plain words what maintenance means. The AI Chat Assistant lists maintenance as an add-on.
+- **"What is an AI employee?"** on the homepage: three steps (it listens → it knows your business → it acts, then tells you) plus a simple staff-vs-AI comparison.
+- **Seven industry pages:** hospitals, dental & medical clinics, Caribbean hotels/villas/tours, beauty salons & spas, restaurants, real estate and home services. Each opens with an "In plain words" summary and has a **"What the research says"** box with linked sources.
+- **All-industries hub** (`industries.html`): 32 kinds of business in 8 groups (health, travel & hospitality, beauty & fitness, home services, professional services, property, retail, education & more), plus a "Don’t see your business?" section explaining the four jobs every business has.
+- **Research used** (only well-sourced findings): Harvard Business Review, "The Short Life of Online Sales Leads" (2011); Cochrane review of mobile phone appointment reminders; a 14-hospital reminder trial (npj Digital Medicine, 2020); Caribbean Hotel & Tourism Association Direct Booking Summit (2025). Vendor-only statistics (for example "62% of calls go unanswered") were deliberately left out.
+- **Measured (local http, Lighthouse 12, desktop):** home 98, hub 99, Caribbean page 99 performance; 100 accessibility, best practices and SEO on all three; CLS 0.
+
 ## Design tokens (`:root` in `css/style.css`)
 
 Change colours **only** in the token block. Token *names* were kept from v5 (e.g. `--cyan`, `--saffron` now both resolve to the magenta accent) so every component re-skins from one place.
@@ -133,7 +142,7 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 - **Responsive:** no horizontal overflow at 360–1440 px (the `g-5` gutters overhung phone screens); SLA table has sticky row labels and a swipe hint on phones; hub labels fit on small phones; estimator options use a 2-column grid on phones; fixed estimator text sizes that `.card-nx p` was overriding.
 - **Edge cases:** ROI no longer shows ₹0 for tiny values; very long contact messages are shortened in the email link (links over ~2,000 characters fail silently in some email apps); name and message have `maxlength`.
 - **Performance:** CLS measured at 0.00 on every page (was up to 0.22, caused by font swap re-wrapping headings); hero price line is in the HTML so it doesn't shift the page.
-- **Photography:** 53 CC0 photos from StockSnap (via Openverse) plus 9 small marquee chips, graded to the navy palette, WebP, under 1 MB in total (each page loads only its own; below-the-fold ones are lazy-loaded). Home: dark city photo behind the hero, photo chips in the industries marquee, photo in the free-consultation banner, thumbnails in "Every screen", a photo layer under each of the 8 service scenes, photos on the capability cards, industry tiles and section heads. Every other page: page-hero photo, section photos and a background photo in the closing call-to-action. Larger photos carry a "Stock photo (CC0)" caption; none show your team, office or clients.
+- **Photography:** 56 CC0 photos from StockSnap (via Openverse) plus 9 small marquee chips, graded to the navy palette, WebP, under 1 MB in total (each page loads only its own; below-the-fold ones are lazy-loaded). Home: dark city photo behind the hero, photo chips in the industries marquee, photo in the free-consultation banner, thumbnails in "Every screen", a photo layer under each of the 8 service scenes, photos on the capability cards, industry tiles and section heads. Every other page: page-hero photo, section photos and a background photo in the closing call-to-action. Larger photos carry a "Stock photo (CC0)" caption; none show your team, office or clients.
 
 | File (`assets/images/photos/`) | Source (CC0) |
 |---|---|
@@ -190,6 +199,9 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 | `cta-handshake.webp` | [Work Business](https://stocksnap.io/photo/work-business-J5LXKNDREC) |
 | `genai-code.webp` | Code Coding | https://stocksnap.io/photo/FSPLFPQBCZ | CC0 |
 | `global-remote.webp` | Macbook Laptop | https://stocksnap.io/photo/7ULJ7GRFDB | CC0 |
+| `ind-hospital.webp` | Doctors Hospital | https://stocksnap.io/photo/5YUFL6LC0E | CC0 |
+| `ind-salon.webp` | Hair Cut | https://stocksnap.io/photo/ASMG0XOU6M | CC0 |
+| `ind-caribbean.webp` | Tropical Beach | https://stocksnap.io/photo/HWWGZ3RNXT | CC0 |
 
 `chip-*.webp` are 48 px crops of the `ind-*.webp` photos.
 

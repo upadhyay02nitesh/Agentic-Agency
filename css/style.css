@@ -1580,3 +1580,70 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 .is-light .tech-card i { color: var(--accent-ink); }
 .is-light .tech-card:hover { background: var(--panel-grey); border-color: var(--line-strong); }
 .footer-contact a[href^="mailto"] { font-size: .86rem; }
+
+/* ---- V9: plain-English packages, explainer, research, industries hub ------------ */
+.pkg-plain { font-size: .98rem; font-weight: 500; color: var(--ink); line-height: 1.45; margin: 10px 0 4px; min-height: 4.4em; }
+.pkg-maint { display: flex; gap: 8px; align-items: flex-start; margin: 4px 0 14px; padding: 9px 12px; border-radius: 12px; font-size: .82rem; line-height: 1.35; background: #ececf1; color: #47464a; }
+.pkg-maint i { flex: none; margin-top: 1px; }
+.pkg-maint.is-free { background: #e8f8ee; color: #0b5a2c; }
+.pkg-maint.is-free i { color: #0b6b34; }
+.pkg-maint b { color: inherit; }
+.pkg-notice { margin: 0 0 18px; padding-top: 12px; border-top: 1px solid var(--line); font-size: .88rem; color: #47464a; }
+.pkg-notice b { color: var(--ink); }
+.pkg .check-list { margin-bottom: 14px; }
+.maint-explain { display: flex; gap: 14px; align-items: flex-start; margin-top: 22px; padding: 18px 22px; border-radius: 20px; background: #e8f8ee; color: #0b3d20; font-size: .95rem; line-height: 1.55; }
+.maint-explain i { flex: none; font-size: 1.5rem; color: #0b6b34; }
+.maint-explain b { color: #06351b; }
+/* "What is an AI employee?" */
+.exp-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: none; }
+.exp-steps li { position: relative; padding: 26px 24px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); }
+.exp-steps li > i { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--accent); color: var(--ink); font-size: 1.35rem; margin-bottom: 16px; }
+.exp-n { position: absolute; right: 22px; top: 18px; font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; line-height: 1; color: rgba(255,255,255,.08); }
+.exp-steps h3 { font-size: 1.2rem; margin: 0 0 6px; }
+.exp-steps p { margin: 0; }
+.exp-compare { display: grid; gap: 12px; margin-top: 18px; }
+.exp-compare > div { padding: 20px 24px; border-radius: var(--radius-lg); background: #0b0b0c; border: 1px solid var(--line); }
+.exp-compare .is-ai { background: linear-gradient(135deg, rgba(var(--rgb-blue), .16), rgba(var(--rgb-glow), .14)); border-color: rgba(var(--rgb-blue), .45); }
+.exp-k { display: block; font-size: .76rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+.exp-compare .is-ai .exp-k { color: var(--accent); }
+.exp-compare ul { margin: 0; padding-left: 18px; color: var(--muted); }
+.exp-compare .is-ai ul { color: #fff; }
+.exp-foot { text-align: center; margin: 22px auto 0; max-width: 640px; color: var(--muted); }
+@media (min-width: 768px) { .exp-steps { grid-template-columns: repeat(3, 1fr); } .exp-compare { grid-template-columns: 1fr 1fr; } }
+/* industry pages: plain words + research */
+.plain-sec { padding: 0 0 8px; }
+.plain-box { margin: 0; padding: 22px 26px; border-radius: var(--radius-lg); background: var(--panel); color: var(--ink); font-size: clamp(1.05rem, 1.8vw, 1.25rem); font-weight: 500; line-height: 1.5; }
+.plain-k { display: block; font-size: .76rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 6px; }
+.research-sec { padding-top: 0; }
+.research { padding: clamp(22px, 3vw, 34px); border-radius: var(--radius-lg); border: 1px solid rgba(var(--rgb-glow), .45); background: linear-gradient(160deg, rgba(var(--rgb-glow), .12), #0b0b0c 60%); }
+.research-h { font-size: clamp(1.3rem, 2.6vw, 1.8rem); margin-bottom: 14px; }
+.research ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.research li { padding: 16px 18px; border-radius: 16px; background: rgba(0,0,0,.4); border: 1px solid var(--line); }
+.research li p { margin: 0 0 6px; color: #fff; font-size: 1rem; }
+.research li p b { color: var(--accent); }
+.research li a { font-size: .8rem; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.research li a:hover { color: #fff; }
+.research-note { margin: 14px 0 0; font-size: .8rem; color: var(--faint); }
+@media (min-width: 992px) { .research ul { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); } }
+/* industries hub */
+.ind-card--link { color: inherit; }
+.ind-card--link:hover { color: inherit; }
+.ind-card--link .ind-body .link-arrow { margin-top: auto; padding-top: 8px; }
+.hub-group { padding: 22px 0; border-top: 1px solid var(--line); }
+.hub-group:first-of-type { border-top: 0; padding-top: 0; }
+.hub-h { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; text-transform: none; letter-spacing: -.01em; margin-bottom: 14px; color: var(--ink); }
+.hub-h i { color: var(--accent-ink); }
+.hub-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.hub-tile { display: flex; flex-direction: column; padding: 16px 18px; border-radius: 18px; background: var(--panel-grey); }
+.hub-tile.has-page { background: #fff; box-shadow: inset 0 0 0 2px var(--accent); }
+.hub-tile h3 { font-size: 1rem; margin: 0 0 4px; }
+.hub-tile p { font-size: .88rem; margin: 0 0 6px; }
+.hub-tile .link-arrow { margin-top: auto; }
+.any-biz { display: grid; gap: 24px; padding: clamp(24px, 4vw, 44px); border-radius: var(--radius-xl); background: #0b0b0c; border: 1px solid var(--line); }
+.any-biz p b { color: #fff; }
+.any-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.any-list li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; background: var(--surface-2); color: #fff; font-weight: 500; }
+.any-list i { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: var(--ink); }
+@media (min-width: 992px) { .any-biz { grid-template-columns: 1.2fr 1fr; align-items: center; } }
+.ind-card--any { background: linear-gradient(160deg, rgba(var(--rgb-glow), .18), #0b0b0c 70%); border-color: rgba(var(--rgb-blue), .4); }
+.ind-card--any .ind-body > i { font-size: 2rem; color: var(--accent); }
