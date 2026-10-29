@@ -1804,3 +1804,5 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 .exp-steps li { padding: 20px; }
 .exp-steps li > i { width: 44px; height: 44px; margin-bottom: 12px; font-size: 1.15rem; }
 @media (min-width: 992px) { .pkg-more--3 { grid-template-columns: repeat(3, 1fr); } }
+/* grid children may shrink: the swipeable rows scroll inside their column instead of widening the page */
+.chat-demo > *, .help > *, .help-panel > * { min-width: 0; }
