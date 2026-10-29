@@ -488,12 +488,10 @@
         card.focus({ preventScroll: true }); card.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
         if (!reduceMotion) confetti(card);
       }).catch(function (err) {
-        if (window.console) console.warn('Enquiry email failed:', err && err.message);   // owner hint, e.g. 'needs Activation'
-        var m = enquiryWa(data);
-        status.className = 'form-status show err';
-        status.innerHTML = 'Sorry, we could not send that just now. Please send it on WhatsApp or email us at <a href="mailto:' + (CONFIG.email || CONFIG.formEmail) + '">' + esc(CONFIG.email || CONFIG.formEmail) + '</a>:<br>';
-        var w = document.createElement('a'); w.className = 'btn-nx btn-nx--primary btn-nx--sm'; w.href = waLink(m); w.target = '_blank'; w.rel = 'noopener';
-        w.innerHTML = '<i class="bi bi-whatsapp" aria-hidden="true"></i> Send on WhatsApp'; status.appendChild(w);
+        // Never lose a lead: if the silent send fails (e.g. FormSubmit not activated yet, or offline),
+        // hand the enquiry to the visitor's email app, ready to send, with Gmail / WhatsApp as backups.
+        if (window.console) console.warn('Enquiry email failed, falling back to email app:', err && err.message);   // owner hint, e.g. 'needs Activation'
+        openEmailApp(data, status, form);
       }).then(function () { btn.disabled = false; btn.removeAttribute('aria-busy'); btn.innerHTML = label; });
     });
   }
