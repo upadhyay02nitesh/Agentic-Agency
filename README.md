@@ -1,6 +1,6 @@
-# Next Gen AI Infotech — Website
+# NextGen AI Labs — Website
 
-A static website for **Next Gen AI Infotech**, a digital solutions company: business and corporate websites, landing pages, e-commerce, custom web apps, AI and generative-AI integration, chatbots and agents, WhatsApp Business, CRM and API integration, workflow automation, maintenance and SEO foundations. For Indian and international clients.
+A static website for **NextGen AI Labs**, a digital solutions company: business and corporate websites, landing pages, e-commerce, custom web apps, AI and generative-AI integration, chatbots and agents, WhatsApp Business, CRM and API integration, workflow automation, maintenance and SEO foundations. For Indian and international clients.
 
 Stack: HTML5, CSS3, vanilla JavaScript, Bootstrap 5 (grid + navbar collapse only), Bootstrap Icons, Google Fonts (Montserrat). No build step, no WebGL.
 
@@ -109,7 +109,7 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 ## V17–V18: SEO for nextgenailabs.com + Guides
 
 - **Domain everywhere:** canonical URLs (homepage canonical is `/`), Open Graph and Twitter tags, JSON-LD, `sitemap.xml` (27 URLs with lastmod and priority) and `robots.txt`. Internal homepage links point to `/`; `vercel.json` redirects `/index.html` to `/`.
-- **Titles and descriptions** rewritten for every page (titles ≤ 60 characters, descriptions 140–160) around what owners search for, e.g. "AI Receptionist for Dental & Medical Clinics". Brand spelled consistently as "NextGen AI Infotech".
+- **Titles and descriptions** rewritten for every page (titles ≤ 60 characters, descriptions 140–160) around what owners search for, e.g. "AI Receptionist for Dental & Medical Clinics". Brand spelled consistently as "NextGen AI Labs".
 - **Structured data:** Organization, WebSite and ProfessionalService on the homepage; BreadcrumbList on every inner page; Service on industry pages; OfferCatalog with USD prices on pricing; BlogPosting + FAQPage on guides; FAQPage on home, pricing and industry pages.
 - **Guides** (`guides.html` + 5 articles): AI receptionist cost, stopping missed calls, reducing no-shows, replying to leads fast, AI chatbots for small business websites. Plain English, sourced research only (HBR, Cochrane, a 14-hospital trial), internal links to the matching service pages. Add one new guide a month to keep growing organic traffic.
 - **Also:** new 1200×630 social share image (`assets/images/og-cover.png`), a `404.html` (noindex), and `vercel.json` with caching (fonts/vendor 1 year, images 30 days, CSS/JS 1 hour) and security headers.

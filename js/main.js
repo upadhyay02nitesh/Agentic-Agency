@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NextGenAI Infotech — main.js
+   NextGen AI Labs — main.js
    UI behaviour: config → page, navbar + mobile menu, scroll reveal, text split,
    card tilt, magnetic buttons, hero scroll transition, portfolio filter,
    FAQ accordion, pricing toggle, contact form.

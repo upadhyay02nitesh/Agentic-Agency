@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NextGen AI Infotech — globe.js (ES module, loaded on demand by main.js)
+   NextGen AI Labs — globe.js (ES module, loaded on demand by main.js)
    3D globe for the "Worldwide" section: dark sphere with a rim glow, lat/long grid,
    dotted surface, pulsing country markers, animated arcs from our team, a tilted
    orbit ring and HTML labels for markers facing the viewer. Drag to spin.

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NextGenAI Infotech — effects.js
+   NextGen AI Labs — effects.js
    Visual effects engine. Exposes window.NextGenFX.
 
    Rendering tiers (picked once at load):

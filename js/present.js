@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NextGen AI Infotech — present.js
+   NextGen AI Labs — present.js
    Homepage "presentation": pinned day-in-the-life, one pinned slide per automation
    (problem → what we build → diagram draws → numbers count), a path that fills,
    slide dots + ← / → keys. Uses GSAP + ScrollTrigger (CDN).

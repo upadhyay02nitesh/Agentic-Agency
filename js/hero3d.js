@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NextGen AI Infotech — hero3d.js (ES module, loaded on demand by main.js)
+   NextGen AI Labs — hero3d.js (ES module, loaded on demand by main.js)
    3D hero: an energy core (animated fresnel sphere + glow + wireframe shell),
    three tilted orbit rings with satellites, particle streams spiralling in and
    shooting out, and task chips that orbit in 3D, dive into the core and come
