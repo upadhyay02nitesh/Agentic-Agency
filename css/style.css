@@ -1885,3 +1885,5 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 @media (min-width: 992px) { .hero--v7 .live-feed { position: absolute; right: calc(2vw + 4px); bottom: 26px; margin: 0; } }
 @media (min-width: 1400px) { .hero--v7 .live-feed { right: 4vw; } }
 @media (prefers-reduced-motion: reduce) { .lf-row.is-new { animation: none; } }
+.lf-list > li { min-width: 0; }   /* long event text truncates instead of widening the card on small phones */
+.live-feed { max-width: 100%; }
