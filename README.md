@@ -266,3 +266,8 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 **Still yours to fill (proof for enterprise bids):** real case studies with outcomes, named team members with experience, client references, and any certifications you actually hold. The site has clearly marked slots for these and makes no invented claims.
 
 **Not verified:** real devices (only headless Chrome with a software GPU), Safari/iOS rendering of the WebGL shaders, and a Lighthouse run on the live domain.
+
+## V23: form works without JavaScript + thank-you page
+
+- The enquiry form (`index.html`, `contact.html`) now has `action="https://formsubmit.co/sales@nextgenailabs.com"` plus FormSubmit hidden fields (`_subject`, `_template`, `_captcha`, `_next`, `_autoresponse`, `_honey`). With JavaScript on, `js/main.js` still sends it silently and shows the animated success card. Without JavaScript, the browser posts to FormSubmit, which shows its captcha and then redirects to `thank-you.html`.
+- `thank-you.html` is noindex and blocked in `robots.txt`. The 404 page's social tags were fixed (they had been copied from the privacy page).
