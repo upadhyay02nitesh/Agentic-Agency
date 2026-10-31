@@ -136,7 +136,7 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 
 ## V22: AI Starter plan
 
-- New entry plan **AI Starter**: $299 setup + $49/month (`CONFIG.packages.lite`). It is a simple website FAQ assistant that sends enquiries to email. It shows as a strip above the package cards on the homepage and pricing page, appears in the pricing OfferCatalog JSON-LD and the service dropdown, and is what the team builder recommends when only the chat assistant is selected.
+- New entry plan **AI Starter**, now $149 setup + $29/month (see V25) (`CONFIG.packages.lite`). It is a simple website FAQ assistant that sends enquiries to email. It shows as a strip above the package cards on the homepage and pricing page, appears in the pricing OfferCatalog JSON-LD and the service dropdown, and is what the team builder recommends when only the chat assistant is selected.
 
 ## Design tokens (`:root` in `css/style.css`)
 
@@ -279,3 +279,7 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 - **Case studies:** add verified projects to `CONFIG.proof.cases` in `js/main.js` (the expected fields are in the comment there) and the cards appear in `#proof`. Leave it empty until a client has approved the content. Never add invented results.
 - **SEO:** new titles and descriptions on the homepage, AI Automation, Integrations and Enterprise pages; `solutions.html` added to `sitemap.xml`; `ItemList` of services on the homepage. `robots.txt` no longer blocks `404.html` and `thank-you.html`, because crawlers must be able to read their `noindex` tag.
 - The sitewide main button now reads **Book a Free Consultation**.
+
+## V25: beginner agency prices
+
+- All prices live in `CONFIG` in `js/main.js`: `packages`, `pricing` (websites) and `estimator`. The numbers in the HTML are fallbacks for visitors without JavaScript. If a package price changes, also update the `OfferCatalog` JSON-LD in `pricing.html` and the "AI Starter ($149)" form option in `index.html` and `contact.html`.

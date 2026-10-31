@@ -33,12 +33,12 @@
     founder: { name: '', role: 'Founder & GenAI engineer', bio: '', photo: '', linkedin: '', github: '' },
     // AI packages (home + pricing + industry pages). SAMPLE PRICES in USD: set your real ones.
     packages: {
-      lite:     { setup: 299,  monthly: 49 },     // AI Starter: simple website FAQ assistant for small budgets
-      chat:     { setup: 1490, monthly: 149 },
-      voice:    { setup: 2490, monthly: 349 },
-      followup: { setup: 1990, monthly: 199 },
-      growth:   { setup: 5900, monthly: 590 },
-      email:    { setup: 990,  monthly: 99 }     // AI Email Assistant add-on
+      lite:     { setup: 149,  monthly: 29 },     // AI Starter: simple website FAQ assistant for small budgets
+      chat:     { setup: 499, monthly: 49 },
+      voice:    { setup: 899, monthly: 149 },
+      followup: { setup: 699, monthly: 79 },
+      growth:   { setup: 1499, monthly: 169 },
+      email:    { setup: 349,  monthly: 39 }     // AI Email Assistant add-on
     },
     // Proof section on the homepage. Stays hidden until you add REAL entries. Never invent these.
     // results:      [{ value: '32 h', label: 'saved per week at a 6-person clinic' }]
@@ -51,9 +51,9 @@
     currency: { symbol: '$', code: 'USD', locale: 'en-US' },
     // Package prices in USD (numbers). SAMPLE VALUES: replace with your real prices.
     pricing: {
-      starter:  { once: 1490,  yearly: 390 },
-      business: { once: 3900,  yearly: 790 },
-      custom:   { from: 9900 }
+      starter:  { once: 399,  yearly: 99 },
+      business: { once: 999,  yearly: 199 },
+      custom:   { from: 2499 }
     },
     // "Starting at $___" on service cards. Leave '' to hide the line.
     startingAt: { websites: '', ecommerce: '', landing: '', webapps: '', mobile: '', seo: '', whatsapp: '', maintenance: '' },
@@ -62,24 +62,24 @@
     usdRate: 0,                                    // legacy INR→USD helper line; 0 keeps it hidden (prices are already USD)
     estimator: {
       types: {
-        website:    { label: 'Business website',           min: 1500,  max: 6000,   wk: [3, 6] },
-        ecommerce:  { label: 'E-commerce store',           min: 4000,  max: 20000,  wk: [5, 10] },
-        webapp:     { label: 'Web app / dashboard',        min: 12000, max: 60000,  wk: [8, 16] },
-        mobile:     { label: 'Mobile app',                 min: 15000, max: 80000,  wk: [10, 20] },
-        ai:         { label: 'AI agent / automation',      min: 5000,  max: 40000,  wk: [3, 10] },
-        platform:   { label: 'Enterprise platform / SaaS', min: 60000, max: 300000, wk: [16, 40] }
+        website:    { label: 'Business website',           min: 400,  max: 1500,   wk: [3, 6] },
+        ecommerce:  { label: 'E-commerce store',           min: 1000,  max: 4000,  wk: [5, 10] },
+        webapp:     { label: 'Web app / dashboard',        min: 2500, max: 12000,  wk: [8, 16] },
+        mobile:     { label: 'Mobile app',                 min: 3000, max: 15000,  wk: [10, 20] },
+        ai:         { label: 'AI agent / automation',      min: 500,  max: 5000,  wk: [3, 10] },
+        platform:   { label: 'Enterprise platform / SaaS', min: 10000, max: 50000, wk: [16, 40] }
       },
       features: {
-        crm:      { label: 'CRM integration',              min: 2000, max: 10000, wk: 2 },
-        erp:      { label: 'ERP / accounting (QuickBooks, Xero)', min: 3000, max: 15000, wk: 3 },
-        payments: { label: 'Payments (Stripe, PayPal)',    min: 1000, max: 4000,  wk: 1 },
-        wa:       { label: 'WhatsApp Business API',        min: 1500, max: 6000,  wk: 1 },
-        bot:      { label: 'AI chatbot / assistant',       min: 3000, max: 20000, wk: 3 },
-        rag:      { label: 'AI on your documents',         min: 6000, max: 30000, wk: 4 },
-        auth:     { label: 'User accounts & roles',        min: 2000, max: 10000, wk: 2 },
-        admin:    { label: 'Admin panel & reports',        min: 3000, max: 12000, wk: 3 },
-        lang:     { label: 'Multi-language',               min: 1000, max: 5000,  wk: 1 },
-        motion:   { label: '3D / premium animation',       min: 2000, max: 12000, wk: 2 }
+        crm:      { label: 'CRM integration',              min: 300, max: 1500, wk: 2 },
+        erp:      { label: 'ERP / accounting (QuickBooks, Xero)', min: 500, max: 2500, wk: 3 },
+        payments: { label: 'Payments (Stripe, PayPal)',    min: 150, max: 600,  wk: 1 },
+        wa:       { label: 'WhatsApp Business API',        min: 200, max: 800,  wk: 1 },
+        bot:      { label: 'AI chatbot / assistant',       min: 300, max: 2500, wk: 3 },
+        rag:      { label: 'AI on your documents',         min: 800, max: 5000, wk: 4 },
+        auth:     { label: 'User accounts & roles',        min: 300, max: 1500, wk: 2 },
+        admin:    { label: 'Admin panel & reports',        min: 500, max: 2000, wk: 3 },
+        lang:     { label: 'Multi-language',               min: 150, max: 700,  wk: 1 },
+        motion:   { label: '3D / premium animation',       min: 300, max: 1800, wk: 2 }
       },
       scale: {
         standard:   { label: 'Standard',   mult: 1,   team: '1 project lead, 1–2 developers, 1 designer' },
