@@ -292,4 +292,8 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 
 ## V27: file versions
 
-- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=29`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
+- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=32`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
+
+## V30: 3D loader
+
+- First page of each visit shows a 1.5 second CSS 3D cube (`.loader3d`, added by the small script after `<body>`). It uses no library, ends on its own, lets clicks through and is skipped when reduced motion is on. Later pages in the same visit skip it through the `no-intro` class.

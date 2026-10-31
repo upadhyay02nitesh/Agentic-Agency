@@ -222,7 +222,7 @@
       el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
       $$('.split-word', el).forEach(function (s) { s.setAttribute('aria-hidden', 'true'); });
     });
-    var intro = $('.intro'), wait = (intro && !document.documentElement.classList.contains('no-intro') && !reduceMotion) ? 1300 : 0;
+    var wait = $('.loader3d') ? 1100 : 0;                     // the headline rises as the 3D loader leaves
     setTimeout(function () { $$('[data-split].hero-split').forEach(function (h) { h.classList.add('split-ready'); }); }, wait);
   }
 

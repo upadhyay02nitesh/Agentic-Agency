@@ -2235,3 +2235,31 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 @media (min-width: 992px) { .hw-path { right: calc(25% + 6px); } }
 @media (max-width: 1199.98px) { .sec-nav { display: none; } }
 @media (max-width: 359.98px) { .mobile-bar .mb-quote i { display: none; } }
+
+/* ---- V30: 3D loader (transform/opacity only; ends by itself and never takes clicks) ----------- */
+.loader3d { position: fixed; inset: 0; z-index: 4000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; background: #000; pointer-events: none; animation: l3Out 1.5s linear forwards; }
+.l3-scene { position: relative; width: 170px; height: 170px; perspective: 700px; animation: l3Zoom 1.5s linear forwards; }
+.l3-cube { position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px; transform-style: preserve-3d; animation: l3Spin 2.6s linear infinite; }
+.l3-cube i { position: absolute; inset: 0; display: grid; place-items: center; border: 1.5px solid #ff8ee8; border-radius: 12px; background: linear-gradient(135deg, rgba(255, 41, 208, .5), rgba(123, 47, 255, .42)); box-shadow: inset 0 0 18px rgba(255, 41, 208, .55); color: #fff; font: 800 1.45rem/1 var(--font-display); backface-visibility: visible; opacity: 0; animation: l3Face .65s var(--ease) forwards; }
+.l3-cube i::after { content: "AI"; }
+.l3-f1 { --r: rotateY(0deg); } .l3-f2 { --r: rotateY(90deg); animation-delay: .06s !important; } .l3-f3 { --r: rotateY(180deg); animation-delay: .12s !important; }
+.l3-f4 { --r: rotateY(-90deg); animation-delay: .18s !important; } .l3-f5 { --r: rotateX(90deg); animation-delay: .24s !important; } .l3-f6 { --r: rotateX(-90deg); animation-delay: .3s !important; }
+.l3-ring { position: absolute; inset: 6px; border: 1.5px solid rgba(255, 41, 208, .62); border-top-color: #fff; border-radius: 50%; transform-style: preserve-3d; animation: l3RingA 1.5s linear infinite; }
+.l3-ring--b { inset: -6px; border-color: rgba(123, 47, 255, .7); border-top-color: #ff8ee8; animation: l3RingB 2s linear infinite; }
+.l3-shadow { position: absolute; left: 50%; bottom: -8px; width: 92px; height: 12px; margin-left: -46px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 41, 208, .55), transparent); }
+.l3-name { margin: 8px 0 0; color: #fff; font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; }
+.l3-name em { color: var(--accent); font-style: normal; }
+.l3-bar { position: relative; width: 140px; height: 2px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, .14); }
+.l3-bar::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: scaleX(0); transform-origin: left; animation: l3Fill 1.15s var(--ease) forwards; }
+@keyframes l3Out { 0%, 76% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+@keyframes l3Zoom { 0%, 70% { transform: scale(1); } 100% { transform: scale(2.4); } }
+@keyframes l3Spin { from { transform: rotateX(-24deg) rotateY(0deg); } to { transform: rotateX(-24deg) rotateY(360deg); } }
+@keyframes l3Face { from { opacity: 0; transform: var(--r) translateZ(150px); } to { opacity: 1; transform: var(--r) translateZ(38px); } }
+@keyframes l3RingA { from { transform: rotateX(74deg) rotateZ(0deg); } to { transform: rotateX(74deg) rotateZ(360deg); } }
+@keyframes l3RingB { from { transform: rotateY(68deg) rotateZ(0deg); } to { transform: rotateY(68deg) rotateZ(-360deg); } }
+@keyframes l3Fill { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .loader3d { display: none; } }
+@media print { .loader3d { display: none; } }
+.l3-cube i { backface-visibility: hidden; background: linear-gradient(135deg, rgba(255, 41, 208, .9), rgba(123, 47, 255, .88)); }   /* back faces off: no mirrored text */
+@media (max-width: 429.98px) { .mobile-bar .mb-quote i { display: none; } .mobile-bar .mb-quote { white-space: nowrap; letter-spacing: .02em; font-size: .78rem; } }
+@media (max-width: 359.98px) { .mobile-bar .mb-quote { white-space: normal; line-height: 1.15; text-align: center; } }
