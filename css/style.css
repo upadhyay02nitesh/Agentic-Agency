@@ -2347,3 +2347,4 @@ body.chat-locked { position: fixed; top: var(--chat-lock-top, 0); left: 0; right
 @media (max-width: 575.98px) { :root { --chat-quick-max: 40%; } }
 @media (min-width: 576px) and (max-height: 560px) { .chat-quick.is-all { flex-wrap: nowrap; max-height: none; overflow-x: auto; overflow-y: hidden; } }
 @media (prefers-reduced-motion: reduce) { .chat-orb, .chat-think-txt, .chat-dots i { animation: none; } .chat-think-txt { color: var(--muted); background: none; } }
+@media (max-width: 767.98px) { .fab-dock .wa-float { display: none; } }   /* the sticky bar already has WhatsApp here */
