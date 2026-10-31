@@ -24,7 +24,7 @@
     formEmail: 'sales@nextgenailabs.com',   // inbox that receives form enquiries (via FormSubmit). Not shown on the page.                         
     city: '',                            // e.g. 'Bengaluru'
     address: 'Remote · serving clients worldwide',  // office address, or how you work
-    delivery: 'about 6 weeks',               // typical delivery time
+    delivery: 'about 6 weeks',                 // typical delivery time
     social: { linkedin: '', instagram: '', github: '' },
     // International clients: booking link (Calendly, Cal.com, Google Calendar). Empty = "Book a call" buttons stay hidden.
     bookingUrl: '',

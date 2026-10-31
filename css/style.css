@@ -2203,3 +2203,4 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 }
 .tm-bar:not(.on) { visibility: hidden; }            /* out of the tab order and screen readers while it is not showing */
 .hero3d-labels { display: none; }                   /* the demo feed already says what the AI is doing */
+.svc3-links { display: grid; gap: 8px; margin-top: auto; } .svc3-links .btn-text { margin: 0; }

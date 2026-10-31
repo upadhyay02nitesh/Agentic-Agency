@@ -283,3 +283,9 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 ## V25: beginner agency prices
 
 - All prices live in `CONFIG` in `js/main.js`: `packages`, `pricing` (websites) and `estimator`. The numbers in the HTML are fallbacks for visitors without JavaScript. If a package price changes, also update the `OfferCatalog` JSON-LD in `pricing.html` and the "AI Starter ($149)" form option in `index.html` and `contact.html`.
+
+## V26: SEO pages and machine-readable files
+
+- **Service pages:** `ai-chatbot-development.html`, `ai-voice-assistant.html`, `crm-automation.html`, `business-process-automation.html`, each with Service, FAQPage and BreadcrumbList data.
+- **Guides:** what AI automation is, AI chatbot cost, CRM automation for small business, and 10 tasks to automate. New guides are linked from the homepage, `guides.html` and the older guides.
+- **Files:** `site.webmanifest`, `feed.xml` (RSS), `llms.txt` (summary for AI search tools) and the IndexNow key file `d7cc348109570dc0f4e66af6bb8571d1.txt`. Do not delete the key file. Update `feed.xml`, `llms.txt` and `sitemap.xml` when adding a guide.

@@ -1,0 +1,24 @@
+# NextGen AI Labs
+
+> AI automation company that builds AI chatbots, voice AI assistants, sales follow-up, CRM automation, business process automation and websites for businesses worldwide. Prices are in USD.
+
+Contact: sales@nextgenailabs.com
+
+## Services
+
+- [AI chatbot development](https://www.nextgenailabs.com/ai-chatbot-development.html): AI chatbot development for your website and WhatsApp. We train a chatbot on your business, connect it to your tools and look after it. See plans and pricing.
+- [AI voice assistants](https://www.nextgenailabs.com/ai-voice-assistant.html): AI voice assistants that answer business calls, book appointments and send you a summary, with urgent calls passed to your team. See how it works and pricing.
+- [CRM automation](https://www.nextgenailabs.com/crm-automation.html): CRM automation that adds leads for you, sends follow-ups and keeps records up to date. We connect your CRM to your website, email and WhatsApp.
+- [Business process automation](https://www.nextgenailabs.com/business-process-automation.html): Business process automation for email, documents, invoices, reports and approvals. We find the repetitive work in your business and automate it with AI.
+- [AI automation](https://www.nextgenailabs.com/ai-automation.html)
+- [Website and app development](https://www.nextgenailabs.com/services.html)
+- [Pricing](https://www.nextgenailabs.com/pricing.html)
+- [Industries](https://www.nextgenailabs.com/industries.html)
+
+## Guides
+
+- [What Is AI Automation? A Plain-English Guide for Business Owners](https://www.nextgenailabs.com/guide-what-is-ai-automation.html)
+- [How Much Does an AI Chatbot Cost for a Small Business?](https://www.nextgenailabs.com/guide-ai-chatbot-cost.html)
+- [CRM Automation for Small Business: What to Automate First](https://www.nextgenailabs.com/guide-crm-automation-small-business.html)
+- [10 Business Tasks You Can Automate With AI](https://www.nextgenailabs.com/guide-business-tasks-to-automate.html)
+- [All guides](https://www.nextgenailabs.com/guides.html)
