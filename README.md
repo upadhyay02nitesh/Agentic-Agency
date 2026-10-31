@@ -271,3 +271,11 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 
 - The enquiry form (`index.html`, `contact.html`) now has `action="https://formsubmit.co/sales@nextgenailabs.com"` plus FormSubmit hidden fields (`_subject`, `_template`, `_captcha`, `_next`, `_autoresponse`, `_honey`). With JavaScript on, `js/main.js` still sends it silently and shows the animated success card. Without JavaScript, the browser posts to FormSubmit, which shows its captcha and then redirects to `thank-you.html`.
 - `thank-you.html` is noindex and blocked in `robots.txt`. The 404 page's social tags were fixed (they had been copied from the privacy page).
+
+## V24: focused homepage + AI Solutions page
+
+- **Homepage order:** hero, three service groups (`#services`), one featured scripted demo with "More industries" (`#demo`), four priority industries (`#who`), process (`#how`), proof (`#proof`), three pricing plans (`#packages`), FAQ, consultation form (`#contact`).
+- **`solutions.html`** holds the sections moved from the homepage, interactions intact: what an AI employee is, problem picker, day comparison, the nine AI jobs, savings calculator, team builder, industry tabs and the 3D globe. GSAP and the globe load only on this page, so `js/present.js` is no longer on the homepage.
+- **Case studies:** add verified projects to `CONFIG.proof.cases` in `js/main.js` (the expected fields are in the comment there) and the cards appear in `#proof`. Leave it empty until a client has approved the content. Never add invented results.
+- **SEO:** new titles and descriptions on the homepage, AI Automation, Integrations and Enterprise pages; `solutions.html` added to `sitemap.xml`; `ItemList` of services on the homepage. `robots.txt` no longer blocks `404.html` and `thank-you.html`, because crawlers must be able to read their `noindex` tag.
+- The sitewide main button now reads **Book a Free Consultation**.

@@ -44,7 +44,8 @@
     // results:      [{ value: '32 h', label: 'saved per week at a 6-person clinic' }]
     // testimonials: [{ quote: '…', name: 'Jane Doe', role: 'Owner', company: 'Smile Dental' }]   (with permission)
     // logos:        [{ src: 'assets/images/clients/acme.svg', alt: 'Acme Co.' }]               (with permission)
-    proof: { results: [], testimonials: [], logos: [] },
+    proof: { results: [], testimonials: [], logos: [], cases: [] },   // cases: verified projects only, shown on the homepage. Example shape:
+    // { client: 'Real client name', industry: 'Dental clinic', image: 'assets/images/case.webp', imageAlt: 'Screenshot of the booking assistant', problem: '…', solution: '…', outcome: 'Verified result', url: 'https://…' }
 
     // All prices on the site are in this currency. Change symbol/locale here only.
     currency: { symbol: '$', code: 'USD', locale: 'en-US' },
@@ -899,8 +900,17 @@
   /* ---- Proof: renders only real entries from CONFIG.proof; otherwise the section stays hidden */
   function initProof() {
     var sec = $('[data-proof]'), P = CONFIG.proof || {}; if (!sec) return;
-    var r = P.results || [], q = P.testimonials || [], l = P.logos || [];
-    if (!r.length && !q.length && !l.length) { sec.hidden = true; return; }
+    var r = P.results || [], q = P.testimonials || [], l = P.logos || [], c = P.cases || [], box = $('[data-proof-cases]', sec);
+    if (!r.length && !q.length && !l.length && !c.length) { if (!sec.hasAttribute('data-proof-always')) sec.hidden = true; return; }
+    if (box && c.length) {
+      box.innerHTML = c.map(function (x) {
+        return '<article class="case-card">' + (x.image ? '<img src="' + esc(x.image) + '" alt="' + esc(x.imageAlt || '') + '" width="640" height="360" loading="lazy" decoding="async">' : '') +
+          '<div class="case-body"><span class="case-kicker">' + esc(x.industry || '') + '</span><h3>' + esc(x.client) + '</h3>' +
+          '<dl><dt>Problem</dt><dd>' + esc(x.problem || '') + '</dd><dt>What we built</dt><dd>' + esc(x.solution || '') + '</dd><dt>Outcome</dt><dd>' + esc(x.outcome || '') + '</dd></dl>' +
+          (x.url ? '<a class="btn-text" href="' + esc(x.url) + '" target="_blank" rel="noopener">View project</a>' : '') + '</div></article>';
+      }).join('');
+      box.hidden = false;
+    }
     $('[data-proof-results]', sec).innerHTML = r.map(function (x) { return '<div><b>' + esc(x.value) + '</b><span>' + esc(x.label) + '</span></div>'; }).join('');
     $('[data-proof-quotes]', sec).innerHTML = q.map(function (x) { return '<blockquote><p>“' + esc(x.quote) + '”</p><footer>' + esc(x.name) + (x.role ? ', ' + esc(x.role) : '') + (x.company ? ' · ' + esc(x.company) : '') + '</footer></blockquote>'; }).join('');
     $('[data-proof-logos]', sec).innerHTML = l.map(function (x) { return '<img src="' + esc(x.src) + '" alt="' + esc(x.alt) + '" height="34" loading="lazy">'; }).join('');
@@ -1200,6 +1210,21 @@
     }
   }
 
+  /* ---- Demo: four featured businesses first, the rest behind "More industries" ---- */
+  function initDemoMore() {
+    var box = $('[data-chat-demo]'), tabs = box && $('.chat-tabs', box), more = tabs && $('.chat-more', tabs); if (!more) return;
+    function open(on) { tabs.classList.toggle('is-open', on); more.setAttribute('aria-expanded', on ? 'true' : 'false'); more.textContent = on ? 'Fewer industries' : 'More industries'; }
+    more.addEventListener('click', function () {
+      var on = !tabs.classList.contains('is-open'); open(on);
+      if (on) { var first = $('.is-extra', tabs); if (first) first.focus(); }
+    });
+    // the tablet inbox can pick any conversation: keep the matching tab visible
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-convo]'); if (!b || b.parentNode === tabs) return;
+      var t = $('[data-convo="' + b.getAttribute('data-convo') + '"]', tabs); if (t && t.classList.contains('is-extra')) open(true);
+    });
+  }
+
   /* ---- Effects bootstrap (below-fold canvases start only when near viewport) -- */
   function initEffects() {
     var FX = window.NextGenFX; if (!FX) return;
@@ -1224,7 +1249,7 @@
     // v6 (reference-led redesign): no cursor glow/ring, card tilt, magnetic buttons or hero parallax; motion is scroll reveals only
     applyConfig(); initNav(); initSubnav(); initSplitText(); initReveal();
     initFilters(); initFaq(); initPricing(); initForm(); initProgress(); initSteps(); initShowcase(); initEffects();
-    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initTeamBuilder(); initSectionNav(); initPointerFx(); initPhoneUx(); initProof(); initChatDemo(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
+    initSvcList(); initSliders(); initOwnerRoi(); initTabs(); initTeamBuilder(); initSectionNav(); initPointerFx(); initPhoneUx(); initProof(); initChatDemo(); initDemoMore(); initTaskCounter(); initGlobe(); initHero3D(); initLiveFeed();
     initFlows(); initEstimator(); initRoi(); initHub(); initOffscreenPause();
   });
 })();

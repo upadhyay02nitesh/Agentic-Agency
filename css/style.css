@@ -2159,3 +2159,47 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 /* ---- V23: thank-you page --------------------------------------------------------------- */
 .ty-card { max-width: 720px; }
 .ty-card h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 12px 0 8px; color: var(--ink); }
+
+/* ---- V24: focused homepage --------------------------------------------------------------- */
+.svc3-grid, .ind4-grid, .proof-ways, .case-grid, .price-how { display: grid; gap: 16px; }
+.svc3 { display: flex; flex-direction: column; padding: clamp(22px, 2.6vw, 30px); border-radius: var(--radius-lg); background: var(--panel-grey); color: var(--ink); }
+.svc3-ic { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 16px; border-radius: 14px; background: #fff; color: var(--accent-ink); font-size: 1.3rem; }
+.svc3 h3 { font-size: 1.3rem; margin: 0 0 8px; color: var(--ink); }
+.svc3 p { margin: 0 0 14px; color: #47464a; }
+.svc3 ul { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 8px; font-size: .94rem; color: var(--ink); }
+.svc3 li { display: flex; gap: 8px; } .svc3 li i { color: var(--accent-ink); }
+.svc3 .btn-text { margin-top: auto; color: var(--accent-ink); text-transform: none; letter-spacing: 0; align-self: flex-start; }
+.svc3-also { margin: 22px 0 0; text-align: center; color: #47464a; } .svc3-also a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.demo-tag { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 5px 12px; border: 1px solid var(--line-strong); border-radius: 100px; font-size: .78rem; font-weight: 600; color: var(--text); }
+.chat-tabs .chat-more { display: none; color: var(--accent); }
+.js .chat-tabs .chat-more { display: inline-flex; }
+.js .chat-tabs:not(.is-open) .is-extra { display: none; }
+.ind4 { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); transition: border-color .2s; }
+.ind4:hover { border-color: var(--accent); color: var(--text); }
+.ind4 img { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; }
+.ind4-body { display: flex; flex: 1; flex-direction: column; gap: 6px; padding: 18px; }
+.ind4-body strong { font-size: 1.08rem; }
+.ind4-body > span { color: var(--muted); font-size: .92rem; }
+.ind4-body .ind4-go { display: inline-flex; gap: 6px; margin-top: auto; padding-top: 8px; color: var(--accent); font-weight: 600; }
+.proof-way { display: flex; flex-direction: column; gap: 6px; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); transition: border-color .2s; }
+.proof-way:hover { border-color: var(--accent); color: var(--text); }
+.proof-way i { color: var(--accent); font-size: 1.4rem; } .proof-way span { color: var(--muted); font-size: .93rem; }
+.case-grid { margin-bottom: 16px; }
+.case-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.case-card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.case-body { padding: 20px; } .case-kicker { color: var(--accent); font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.case-body h3 { margin: 4px 0 10px; font-size: 1.2rem; } .case-body dt { font-weight: 700; } .case-body dd { margin: 0 0 8px; color: var(--muted); }
+.price-how { margin: 24px 0 0; padding: 20px; border-radius: var(--radius-lg); background: var(--panel-grey); color: var(--ink); }
+.price-how dt { font-weight: 700; } .price-how dd { margin: 2px 0 0; color: #47464a; font-size: .93rem; }
+.price-all { margin: 22px 0 0; text-align: center; }
+#packages .pkg-row .check-list { margin-bottom: 18px; } #packages .price-card .btn-nx { margin-top: auto; }
+.solutions-cta { text-align: center; } .solutions-cta .hero-cta { justify-content: center; }
+@media (min-width: 576px) { .ind4-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 768px) { .svc3-grid, .proof-ways, .price-how, .case-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1200px) { .ind4-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 991.98px) {
+  .hero--v7 .core-stage { display: none; }          /* phones and tablets: the message and CTAs first, then the labelled demo feed */
+  .chat-tabs { flex-wrap: wrap; overflow: visible; margin: 8px 0 6px; padding: 0; }   /* keeps "More industries" in view */
+}
+.tm-bar:not(.on) { visibility: hidden; }            /* out of the tab order and screen readers while it is not showing */
+.hero3d-labels { display: none; }                   /* the demo feed already says what the AI is doing */

@@ -111,16 +111,18 @@
       var dotsST = ST.create({ trigger: $('.show-track', show), start: 'top 60%', end: 'bottom 40%', onToggle: function (self) { dotsNav.classList.toggle('on', self.isActive); } });
 
       // 3. how we work: the path fills, steps switch on
-      var hw = $('.hw'), hwSteps = $$('.hw-step', hw);
-      hw.style.setProperty('--hw', 0);
-      var hwST = ST.create({ trigger: hw, start: 'top 75%', end: 'bottom 55%', scrub: .4, onUpdate: function (self) {
-        hw.style.setProperty('--hw', self.progress.toFixed(3));
-        hwSteps.forEach(function (st, k) { st.classList.toggle('on', self.progress >= k / (hwSteps.length - 1) * .96); });
-      } });
+      var hw = $('.hw'), hwSteps = hw ? $$('.hw-step', hw) : [], hwST = null;
+      if (hw) {
+        hw.style.setProperty('--hw', 0);
+        hwST = ST.create({ trigger: hw, start: 'top 75%', end: 'bottom 55%', scrub: .4, onUpdate: function (self) {
+          hw.style.setProperty('--hw', self.progress.toFixed(3));
+          hwSteps.forEach(function (st, k) { st.classList.toggle('on', self.progress >= k / (hwSteps.length - 1) * .96); });
+        } });
+      }
 
       return function () {                                  // leaving desktop / motion turned off: back to static
-        root.classList.remove('pres'); dotsST.kill(); hwST.kill(); slideTriggers = [];
-        hw.style.removeProperty('--hw'); hwSteps.forEach(function (st) { st.classList.remove('on'); });
+        root.classList.remove('pres'); dotsST.kill(); slideTriggers = [];
+        if (hw) { hwST.kill(); hw.style.removeProperty('--hw'); hwSteps.forEach(function (st) { st.classList.remove('on'); }); }
         $$('[data-count]').forEach(function (el) { setCount(el, +el.getAttribute('data-count')); });
       };
     });
