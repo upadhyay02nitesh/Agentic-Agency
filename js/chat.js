@@ -25,7 +25,10 @@
 
   // Checked in order; the first matching pattern answers.
   var ANSWERS = [
-    { re: /\b(human|person|agent|someone|call me|talk to|speak|staff|team member)\b/i, text: function () { return 'Of course. You can reach our team on WhatsApp, or email ' + EMAIL + '.'; }, links: function () { return [waLink(), BOOK]; } },
+    { re: /\b(replace|replacing|lose my job|fire)\b.*\b(staff|team|employees?|people)\b/i, text: function () { return 'No. It takes over repetitive jobs such as answering the same questions and typing data, so your people can spend more time with customers. Anything sensitive or unusual goes to a person.'; }, links: function () { return [BOOK]; } },
+    { re: /\b(wrong|mistakes?|errors?|incorrect|hallucinat\w*)\b/i, text: function () { return 'No AI is perfect, so we plan for that. We train it on information you approve, test it before launch, review real conversations and send anything it is unsure about to a person.'; }, links: function () { return [{ label: 'What is AI automation?', href: 'guide-what-is-ai-automation.html' }]; } },
+    { re: /\b(technical|technology|coding|developer|knowledge|tech skills)\b/i, text: function () { return 'No technical knowledge is needed. We set it up, train it and connect it. You tell us about your business and test the result.'; }, links: function () { return [BOOK]; } },
+    { re: /\b(human|person|agent|someone|call me|talk to|speak|team member)\b/i, text: function () { return 'Of course. You can reach our team on WhatsApp, or email ' + EMAIL + '.'; }, links: function () { return [waLink(), BOOK]; } },
     { re: /\b(receptionist|voice|phone calls?|answer calls?|missed calls?)\b/i, text: function () { return 'Our AI Receptionist answers calls, books appointments and sends you a summary. It costs ' + plan('voice') + ', with up to 500 call minutes a month.'; }, links: function () { return [{ label: 'AI voice assistants', href: 'ai-voice-assistant.html' }, BOOK]; } },
     { re: /\b(starter|cheapest|lowest|small budget|basic)\b/i, text: function () { return 'AI Starter is our entry plan: ' + plan('lite') + '. It answers up to 20 common questions and handles up to 300 chats a month.'; }, links: function () { return [PRICING, BOOK]; } },
     { re: /\b(chat ?bots?|website assistant|whatsapp bot)\b/i, text: function () { return 'We build AI chatbots for your website and messaging apps. AI Starter is ' + plan('lite') + ', and AI Chat Assistant is ' + plan('chat') + '.'; }, links: function () { return [{ label: 'AI chatbot development', href: 'ai-chatbot-development.html' }, PRICING]; } },
@@ -38,12 +41,16 @@
     { re: /\b(safe|secure|security|privacy|private|data|nda|own|owner)\b/i, text: function () { return 'We sign an NDA before we start, agree who can access your data, and you own everything we build.'; }, links: function () { return [{ label: 'Privacy policy', href: 'privacy.html' }, BOOK]; } },
     { re: /\b(clinic|hospital|dental|dentist|salon|spa|restaurant|hotel|travel|caribbean|real estate|plumber|industry|industries|my business)\b/i, text: function () { return 'We work with many kinds of business, including clinics, salons, restaurants, travel and real estate. You can see examples for your industry here.'; }, links: function () { return [{ label: 'All industries', href: 'industries.html' }, BOOK]; } },
     { re: /\b(how (does|do) (it|this|you) work|process|get started|start|first step|steps)\b/i, text: function () { return 'It takes four steps: a free call, a written fixed-price plan, we build and connect it, then you test it and we launch and support it.'; }, links: function () { return [BOOK]; } },
-    { re: /\b(where are you|location|country|countries|worldwide|time ?zone|india|usa?)\b/i, text: function () { return 'We work remotely with clients worldwide and invoice in USD.'; }, links: function () { return [BOOK]; } },
+    { re: /\b(where are you|location|country|countries|worldwide|time ?zones?|outside|abroad|international|india|usa?)\b/i, text: function () { return 'We work remotely with clients worldwide and invoice in USD.'; }, links: function () { return [BOOK]; } },
     { re: /\b(contact|email|whatsapp|reach)\b/i, text: function () { return 'Email us at ' + EMAIL + ' or message us on WhatsApp.'; }, links: function () { return [waLink(), BOOK]; } },
     { re: /\b(thanks|thank you|thx|great|perfect|ok|okay)\b/i, text: function () { return 'You are welcome. Is there anything else you would like to know?'; }, links: function () { return []; } },
     { re: /\b(hi|hello|hey|hii|namaste)\b/i, text: function () { return 'Hello! Ask me about prices, AI chatbots, voice assistants or automation.'; }, links: function () { return []; } }
   ];
-  var QUICK = ['What does it cost?', 'Do you build AI chatbots?', 'How long does it take?', 'Talk to a person'];
+  var HUMAN = 'Talk to a person';
+  var QUICK = ['What does it cost?', 'Do you build AI chatbots?', 'Can AI answer my phone calls?', 'How long does it take?', 'What is the cheapest plan?', 'Can you connect my CRM?',
+    'Can AI follow up with my leads?', 'What can you automate?', 'Do you build websites?', 'How does it work?', 'Is maintenance included?', 'Is my data safe?',
+    'Will AI replace my staff?', 'What if the AI gets something wrong?', 'Do I need technical knowledge?', 'Do you work with my industry?', 'Do you work outside the US?'];
+  var QUICK_SHOWN = 3;                                // shown before "More questions"
 
   function getReply(question) {
     for (var i = 0; i < ANSWERS.length; i++) {
@@ -72,7 +79,7 @@
   body.appendChild(dock); body.appendChild(panel);
 
   var log = $('.chat-log', panel), quick = $('.chat-quick', panel), form = $('.chat-form', panel), input = $('.chat-input', panel), closeBtn = $('.chat-close', panel);
-  var started = false, isOpen = false, locked = false, lockY = 0, inerted = [];
+  var started = false, isOpen = false, locked = false, lockY = 0, inerted = [], busy = false, showAll = false, asked = [];
 
   /* ---- Messages -------------------------------------------------------- */
   function toEnd() { log.scrollTop = log.scrollHeight; }
@@ -86,17 +93,39 @@
     });
     log.appendChild(m); toEnd();
   }
-  function ask(q) {
-    q = q.trim().slice(0, 300); if (!q) return;
-    addMsg(q, 'user'); quick.hidden = true;
-    var r = getReply(q);
-    setTimeout(function () { addMsg(r.text, 'bot', r.links); }, reduceMotion ? 0 : 350);
+  function renderQuick() {
+    var left = QUICK.filter(function (q) { return asked.indexOf(q) < 0; }), list = showAll ? left : left.slice(0, QUICK_SHOWN);
+    quick.textContent = ''; quick.classList.toggle('is-all', showAll);
+    list.concat(asked.indexOf(HUMAN) < 0 ? [HUMAN] : []).forEach(function (q) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chat-chip'; b.textContent = q;
+      b.addEventListener('click', function () { ask(q); }); quick.appendChild(b);
+    });
+    if (!showAll && left.length > QUICK_SHOWN) {
+      var more = document.createElement('button'); more.type = 'button'; more.className = 'chat-chip chat-chip--more'; more.textContent = 'More questions (' + (left.length - QUICK_SHOWN) + ')';
+      more.addEventListener('click', function () { showAll = true; renderQuick(); var first = $('.chat-chip', quick); if (first) first.focus(); });
+      quick.appendChild(more);
+    }
+    quick.hidden = !quick.children.length;
   }
-  QUICK.forEach(function (q) {
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'chat-chip'; b.textContent = q;
-    b.addEventListener('click', function () { ask(q); }); quick.appendChild(b);
-  });
-  form.addEventListener('submit', function (e) { e.preventDefault(); ask(input.value); input.value = ''; });
+  // "AI thinking" dots, then the reply; one question at a time
+  function think(ms, done) {
+    busy = true; quick.hidden = true; log.setAttribute('aria-busy', 'true');
+    var t = document.createElement('div'); t.className = 'chat-msg chat-msg--bot chat-thinking'; t.setAttribute('aria-hidden', 'true');
+    t.innerHTML = '<span class="chat-orb"></span><span class="chat-think-txt">AI is thinking</span><span class="chat-dots"><i></i><i></i><i></i></span>';
+    log.appendChild(t); toEnd();
+    setTimeout(function () {
+      log.removeChild(t); log.removeAttribute('aria-busy'); busy = false;
+      done(); showAll = false; renderQuick(); toEnd();
+    }, ms);
+  }
+  function ask(q) {
+    q = q.trim().slice(0, 300); if (!q || busy) return false;
+    addMsg(q, 'user'); if (QUICK.concat(HUMAN).indexOf(q) > -1 && asked.indexOf(q) < 0) asked.push(q);
+    var r = getReply(q);
+    think(reduceMotion ? 300 : Math.min(1500, 800 + q.length * 12), function () { addMsg(r.text, 'bot', r.links); });
+    return true;
+  }
+  form.addEventListener('submit', function (e) { e.preventDefault(); if (ask(input.value)) input.value = ''; });
 
   /* ---- Full-screen phones: stop the page scrolling and hide it from keyboards and screen readers ---- */
   function lock(on) {
@@ -129,7 +158,7 @@
     panel.hidden = !on; body.classList.toggle('chat-open', on);
     openBtn.setAttribute('aria-expanded', on ? 'true' : 'false'); openBtn.setAttribute('aria-label', on ? 'Close chat' : 'Open chat');
     $('i', openBtn).className = 'bi ' + (on ? 'bi-x-lg' : 'bi-chat-dots-fill');
-    if (on && !started) { started = true; addMsg('Hi! I am an automated assistant with set answers. Ask me about prices, AI chatbots or automation, or ask for a person at any time.', 'bot'); }
+    if (on && !started) { started = true; think(reduceMotion ? 0 : 700, function () { addMsg('Hi! I am an automated assistant with set answers. Ask me about prices, AI chatbots or automation, or ask for a person at any time.', 'bot'); }); }
     applyMode();
     if (on) {
       // touch screens: don't pop the keyboard up over the first message

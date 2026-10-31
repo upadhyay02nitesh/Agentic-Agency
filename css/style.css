@@ -2329,3 +2329,21 @@ body.chat-locked { position: fixed; top: var(--chat-lock-top, 0); left: 0; right
 @media (hover: none) { .wa-float:hover { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .chat-panel { animation: none; } .chat-fab, .fab-dock { transition: none; } }
 @media print { .fab-dock, .chat-panel { display: none; } }
+
+/* ---- V34: chat thinking indicator and question list ------------------------------------------ */
+:root { --chat-dot: 6px; --chat-quick-max: min(42%, 230px); }
+.chat-thinking { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; color: var(--muted); font-size: .86rem; }
+.chat-orb { flex: none; width: 16px; height: 16px; border-radius: 50%; background: conic-gradient(var(--accent), var(--violet), var(--accent)); -webkit-mask: radial-gradient(closest-side, transparent 58%, #000 62%); mask: radial-gradient(closest-side, transparent 58%, #000 62%); animation: chatOrb .9s linear infinite; }
+.chat-think-txt { background: linear-gradient(90deg, var(--muted) 30%, #fff 50%, var(--muted) 70%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: chatShine 1.3s linear infinite; }
+.chat-dots { display: inline-flex; gap: 3px; }
+.chat-dots i { width: var(--chat-dot); height: var(--chat-dot); border-radius: 50%; background: var(--accent); animation: chatDot 1s ease-in-out infinite; }
+.chat-dots i:nth-child(2) { animation-delay: .15s; } .chat-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes chatOrb { to { transform: rotate(360deg); } }
+@keyframes chatShine { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@keyframes chatDot { 0%, 100% { opacity: .35; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+.chat-quick { padding-top: var(--fab-gap); border-top: 1px solid var(--line); }
+.chat-quick.is-all { max-height: var(--chat-quick-max); overflow-y: auto; overscroll-behavior: contain; }
+.chat-chip--more { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+@media (max-width: 575.98px) { :root { --chat-quick-max: 40%; } }
+@media (min-width: 576px) and (max-height: 560px) { .chat-quick.is-all { flex-wrap: nowrap; max-height: none; overflow-x: auto; overflow-y: hidden; } }
+@media (prefers-reduced-motion: reduce) { .chat-orb, .chat-think-txt, .chat-dots i { animation: none; } .chat-think-txt { color: var(--muted); background: none; } }
