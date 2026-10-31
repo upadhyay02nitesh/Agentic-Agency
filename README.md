@@ -136,7 +136,7 @@ The homepage reads like a pitch deck: one idea per screen, plain English, no jar
 
 ## V22: AI Starter plan
 
-- New entry plan **AI Starter**, now $149 setup + $29/month (see V25) (`CONFIG.packages.lite`). It is a simple website FAQ assistant that sends enquiries to email. It shows as a strip above the package cards on the homepage and pricing page, appears in the pricing OfferCatalog JSON-LD and the service dropdown, and is what the team builder recommends when only the chat assistant is selected.
+- New entry plan **AI Starter**, now $499 setup + $29/month (`CONFIG.packages.lite`). It is a simple website FAQ assistant that sends enquiries to email. It shows as a strip above the package cards on the homepage and pricing page, appears in the pricing OfferCatalog JSON-LD and the service dropdown, and is what the team builder recommends when only the chat assistant is selected.
 
 ## Design tokens (`:root` in `css/style.css`)
 
@@ -282,7 +282,7 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 
 ## V25: beginner agency prices
 
-- All prices live in `CONFIG` in `js/main.js`: `packages`, `pricing` (websites) and `estimator`. The numbers in the HTML are fallbacks for visitors without JavaScript. If a package price changes, also update the `OfferCatalog` JSON-LD in `pricing.html` and the "AI Starter ($149)" form option in `index.html` and `contact.html`.
+- All prices live in `CONFIG` in `js/main.js`: `packages`, `pricing` (websites) and `estimator`. The numbers in the HTML are fallbacks for visitors without JavaScript. If a package price changes, also update the `OfferCatalog` JSON-LD in `pricing.html` and the "AI Starter ($499)" form option in `index.html` and `contact.html`.
 
 ## V26: SEO pages and machine-readable files
 
@@ -292,4 +292,4 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 
 ## V27: file versions
 
-- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=27`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
+- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=29`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.

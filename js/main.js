@@ -33,11 +33,11 @@
     founder: { name: '', role: 'Founder & GenAI engineer', bio: '', photo: '', linkedin: '', github: '' },
     // AI packages (home + pricing + industry pages). SAMPLE PRICES in USD: set your real ones.
     packages: {
-      lite:     { setup: 149,  monthly: 29 },     // AI Starter: simple website FAQ assistant for small budgets
+      lite:     { setup: 499,  monthly: 29 },     // AI Starter: simple website FAQ assistant for small budgets
       chat:     { setup: 499, monthly: 49 },
-      voice:    { setup: 899, monthly: 149 },
+      voice:    { setup: 799, monthly: 149 },
       followup: { setup: 699, monthly: 79 },
-      growth:   { setup: 1499, monthly: 169 },
+      growth:   { setup: 1299, monthly: 169 },
       email:    { setup: 349,  monthly: 39 }     // AI Email Assistant add-on
     },
     // Proof section on the homepage. Stays hidden until you add REAL entries. Never invent these.
@@ -979,6 +979,8 @@
       ['bi-calendar-x', 'Cancellation, Tue 10 AM', 'Slot offered to waitlist', 1.2], ['bi-globe2', 'Website chat at 2:13 AM', 'Airport transfer added', 24],
       ['bi-instagram', 'Instagram DM from Leo', 'Trial class booked', 19], ['bi-cart', 'Abandoned cart, $84', 'Reminder sent', 0.9],
       ['bi-file-earmark-check', 'Contract signed', 'Onboarding email sent', 1.6], ['bi-bar-chart', '7:00 AM', 'Daily owner report sent', 4.2]];
+    var shown = $$('.lf-txt b', box).map(function (b) { return b.textContent; });   // rows already in the HTML: don't repeat them next to each other
+    EV = EV.filter(function (e) { return shown.indexOf(e[1]) < 0; });
     function clock() { var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
     function add() {
       if (!on || document.hidden) return;

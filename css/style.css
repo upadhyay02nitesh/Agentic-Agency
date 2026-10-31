@@ -2223,3 +2223,15 @@ kbd { font: 600 .74rem var(--font-body); padding: 2px 7px; border: 1px solid var
 }
 @media (min-width: 1200px) { .ind4 { aspect-ratio: 4 / 5; } }
 @media (prefers-reduced-motion: reduce) { .ind4 img, .ind4-body, .ind4-go { transition: none; transform: none; } }
+
+/* ---- V28: homepage audit fixes ------------------------------------------------------------ */
+.nw { display: inline-block; white-space: nowrap; }
+.cta-book:not(:has(a:not([hidden]))) { display: none; }
+.badge-nx { font-size: .75rem; }
+.lf-txt > span { font-size: .75rem; } .lf-time { font-size: .72rem; }
+.footer-bottom a { display: inline-block; padding: 5px 0; }
+.contact-info a { display: inline-block; padding: 3px 0; }
+.footer li a { display: inline-block; padding: 2px 0; }
+@media (min-width: 992px) { .hw-path { right: calc(25% + 6px); } }
+@media (max-width: 1199.98px) { .sec-nav { display: none; } }
+@media (max-width: 359.98px) { .mobile-bar .mb-quote i { display: none; } }
