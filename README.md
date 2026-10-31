@@ -289,3 +289,7 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 - **Service pages:** `ai-chatbot-development.html`, `ai-voice-assistant.html`, `crm-automation.html`, `business-process-automation.html`, each with Service, FAQPage and BreadcrumbList data.
 - **Guides:** what AI automation is, AI chatbot cost, CRM automation for small business, and 10 tasks to automate. New guides are linked from the homepage, `guides.html` and the older guides.
 - **Files:** `site.webmanifest`, `feed.xml` (RSS), `llms.txt` (summary for AI search tools) and the IndexNow key file `d7cc348109570dc0f4e66af6bb8571d1.txt`. Do not delete the key file. Update `feed.xml`, `llms.txt` and `sitemap.xml` when adding a guide.
+
+## V27: file versions
+
+- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=27`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
