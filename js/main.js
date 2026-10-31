@@ -89,6 +89,8 @@
     }
   };
 
+  window.NGA_CONFIG = CONFIG;                      // read by js/chat.js so its prices never drift
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var $ = function (s, r) { return (r || document).querySelector(s); };

@@ -292,8 +292,13 @@ Mobile and low-end devices skip Three.js and use the lite 2D canvas. Below-the-f
 
 ## V27: file versions
 
-- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=32`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
+- HTML pages load `css/style.css`, `js/main.js` and `js/present.js` with `?v=33`. **Raise this number on every page whenever those files change**, or returning visitors can see new pages with old styles.
 
 ## V30: 3D loader
 
 - First page of each visit shows a 1.5 second CSS 3D cube (`.loader3d`, added by the small script after `<body>`). It uses no library, ends on its own, lets clicks through and is skipped when reduced motion is on. Later pages in the same visit skip it through the `no-intro` class.
+
+## V33: chat
+
+- `js/chat.js` adds the chat button and panel to every page, and moves the WhatsApp button into the same dock. It is an automated assistant with set answers, not a live AI model. Edit `ANSWERS` and `QUICK` there. To connect a real AI service, replace `getReply()`; that needs a server for the API key.
+- Styles and size tokens are in "V33: chat" in `css/style.css`.
